@@ -18,21 +18,18 @@ defineOptions({
 });
 
 onBeforeMount(() => {
-  bookStore.addBook();
+  if(bookStore.books.length==0){
+    bookStore.addBook();
+  }
 });
 </script>
 
 <template>
   <QScrollContainer scoll-y
                     class="container-banner scroll-container home-container" @ended="bookStore.addBook()">
-    <QCard v-for="book in bookStore.getBooks" :key="book.id" class="book-card">
-      <template #default>
-        <QLazyImage :src="book.url" class="book-image"  :height="width" :width="width"/>
-      </template>
-      <template #footer>
-        <BookItem :book="book"/>
-      </template>
-    </QCard>
+    <BookItem
+        v-for="book in bookStore.getBooks" :key="book.id"
+        :book="book" :width="width" :height="width"/>
     <QLoading style="height: 100px;" :show="bookStore.loading" class="container-w100" type="skeleton"/>
   </QScrollContainer>
 </template>

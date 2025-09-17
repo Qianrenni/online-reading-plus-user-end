@@ -5,16 +5,26 @@ defineOptions({
   name: 'BookItem'
 })
 defineProps<{
-  book: Book
+  book: Book;
+  width: number;
+  height: number;
 }>()
 </script>
 
 <template>
-  <div class="container-column book-meta" >
-    <h4 class="text-one-line">{{book.name}}</h4>
-    <h5 class="text-one-line">{{book.author}}</h5>
-    <span class="text-one-line tag">{{book.price}}￥</span>
-  </div>
+  <QCard class="book-card">
+    <template #default>
+      <QLazyImage :src="book.url" class="book-image"  :height="width" :width="width"/>
+    </template>
+    <template #footer>
+      <div class="container-column book-meta margin-rem gap-half" >
+        <h4 class="text-one-line">{{book.name}}</h4>
+        <h6 class="text-one-line">作者: {{book.author}}</h6>
+        <QFormButton>开始阅读</QFormButton>
+      </div>
+    </template>
+  </QCard>
+
 </template>
 
 <style scoped lang="css">

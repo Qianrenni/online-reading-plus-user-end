@@ -1,3 +1,4 @@
+
 .container-banner {
     width: 1200px;
 }
@@ -12,6 +13,10 @@
     .header-search {
         width: min-content;
     }
+    .header-container .container {
+        width: 100%;
+        justify-content:space-around;
+    }
 }
 
 .home-container {
@@ -24,15 +29,17 @@
 .book-card {
     width: 200px;
     margin: 1rem 18px;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    background-color: transparent;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2) ;
 }
-.book-meta h4, .book-meta h5 {
-    width: 200px;
+.book-meta h4, .book-meta h6 {
+    width: calc(200px - 2rem);
 }
-.book-meta h5 {
-    text-align: center;
-}
-.book-meta span:last-child {
-    text-align: center;
+.book-image {
+    border-top-right-radius: 1rem;
+    border-top-left-radius: 1rem;
 }
 @media  screen and (max-width: 768px) {
     .home-container {
@@ -42,8 +49,8 @@
         width: 150px;
         margin: 1rem 0;
     }
-    .book-meta h4, .book-meta h5 {
-        width: 150px;
+    .book-meta h4, .book-meta h6 {
+        width: calc(150px - 2rem);
     }
 }
 @media  screen and (max-width: 1200px) {
