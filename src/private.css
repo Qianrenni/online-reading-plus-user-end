@@ -1,0 +1,53 @@
+.container-banner {
+    width: 1200px;
+}
+.header-container {
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.header-search {
+    width: 300px;
+}
+@media  screen and (max-width: 768px) {
+    .header-search {
+        width: min-content;
+    }
+}
+
+.home-container {
+    display: flex;
+    height: calc(100vh - 32px - 1rem);
+    margin: 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.book-card {
+    width: 200px;
+    margin: 1rem 18px;
+}
+.book-meta h4, .book-meta h5 {
+    width: 200px;
+}
+.book-meta h5 {
+    text-align: center;
+}
+.book-meta span:last-child {
+    text-align: center;
+}
+@media  screen and (max-width: 768px) {
+    .home-container {
+        justify-content: space-evenly;
+    }
+    .book-card {
+        width: 150px;
+        margin: 1rem 0;
+    }
+    .book-meta h4, .book-meta h5 {
+        width: 150px;
+    }
+}
+@media  screen and (max-width: 1200px) {
+    .container-banner {
+        width: 100%;
+    }
+}
