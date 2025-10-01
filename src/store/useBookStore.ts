@@ -14,19 +14,20 @@ export const useBookStore = defineStore('book', {
     },
     actions: {
         addBook() {
-            if (this.cursor === null || this.loading){
-                return ;
-            }
-            this.loading = true;
-            useApiBooks.getBooks(this.count, this.cursor).then(res => {
-                const {books, cursor} = res;
-                this.books = [...this.books, ...books];
-                this.cursor = cursor;
-                this.loading = false;
-            }).catch(error=>{
-                this.loading = false;
-                console.log(error);
-            })
+            const {data} =  useApiBooks.getTotalBookCount();
+            // if (this.cursor === null || this.loading){
+            //     return ;
+            // }
+            // this.loading = true;
+            // useApiBooks.getBooks(this.count, this.cursor).then(res => {
+            //     const {books, cursor} = res;
+            //     this.books = [...this.books, ...books];
+            //     this.cursor = cursor;
+            //     this.loading = false;
+            // }).catch(error=>{
+            //     this.loading = false;
+            //     console.log(error);
+            // })
         }
     }
 })
