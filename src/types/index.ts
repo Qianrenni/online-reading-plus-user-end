@@ -1,14 +1,19 @@
 
 export interface Book {
-    author: string;
+    cover: string;
+    id: number,
     category: string;
-    created_at: string;
-    desc: string;
-    free_pages: number;
-    id: number;
-    label: boolean;
+    total_chapter:number,
+    author: string;
+    description: string;
     name: string;
-    price: number;
-    total_pages: number;
-    url: string;
+    tags: string;
+    created_at: string;
+}
+export interface User {
+    id: number;
+    username: string;
+    email: string;
+    avatar: string;
+    is_active: boolean;
 }

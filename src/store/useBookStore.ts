@@ -1,33 +1,46 @@
 import {defineStore} from "pinia";
 import type {Book} from "../types";
 import {useApiBooks} from "../api/books.ts";
+import { useMessage } from "qyani-components";
 
 export const useBookStore = defineStore('book', {
     state: () => ({
         books: [] as Book[],
-        count:20,
+        total:-1,
         cursor:0,
+        count:10,
         loading:false
     }),
     getters: {
         getBooks: (state) => state.books,
     },
     actions: {
-        addBook() {
-            const {data} =  useApiBooks.getTotalBookCount();
-            // if (this.cursor === null || this.loading){
-            //     return ;
-            // }
-            // this.loading = true;
-            // useApiBooks.getBooks(this.count, this.cursor).then(res => {
-            //     const {books, cursor} = res;
-            //     this.books = [...this.books, ...books];
-            //     this.cursor = cursor;
-            //     this.loading = false;
-            // }).catch(error=>{
-            //     this.loading = false;
-            //     console.log(error);
-            // })
+        async addBook() {
+            if(this.total<0){
+                const {success,data,message} =  await useApiBooks.getTotalBookCount();
+                if(success){
+                    this.total = data!;
+                }else{
+                    useMessage.error(message);
+                    return;
+                }
+            }
+            if(this.cursor>=this.total){
+                useMessage.info('没有更多书籍了');
+                return;
+            }
+            if(this.loading){
+                return;
+            }
+            this.loading = true;
+            const {success,data,message} = await useApiBooks.getBooksByList(Array.from({length:this.count},(_,i)=>this.cursor+i+1));
+            if(success){
+                this.books.push(...data!);
+                this.cursor+=this.count;
+            }else{
+                useMessage.error(message);
+            }
+            this.loading = false;
         }
     }
 })

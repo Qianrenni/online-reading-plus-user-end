@@ -1,4 +1,5 @@
 // utils/request.ts
+import { useMessage } from 'qyani-components'
 import { BASE_URL } from '../config'
 
 // 响应码枚举
@@ -59,24 +60,24 @@ export async function request<T = any>(
     const response = await fetch(fullUrl, config)
 
     clearTimeout(timeoutId)
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status} ${response.statusText}`)
-    }
-
     const contentType = response.headers.get('content-type')
     if (!contentType?.includes('application/json')) {
       throw new Error('服务器返回非 JSON 格式')
     }
+    if(response.status===429){
+      return {
+        success:false,
+        data:null,
+        message:'请求频率过快，请稍后再试'
+      }
+    }
+    const result: { code: number; data: T; message?: string } = await response.json();
 
-    const result: { code: number; data: T; message?: string } = await response.json()
-
-    const success = result.code === ResponseCode.SUCCESS
-
+    const success = result.code === ResponseCode.SUCCESS;
     return {
       success,
       data: success ? result.data : null,
-      message: result.message || (success ? '成功' : '请求失败')
+      message: result.message??(success ? '成功' : '请求失败')
     }
   } catch (error) {
     clearTimeout(timeoutId)

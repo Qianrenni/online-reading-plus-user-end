@@ -14,7 +14,7 @@ defineProps<{
 <template>
   <QCard class="book-card">
     <template #default>
-      <QLazyImage :src="book.url" class="book-image"  :height="width" :width="width"/>
+      <QLazyImage :src="book.cover" class="book-image"  :height="width" :width="width"/>
     </template>
     <template #footer>
       <div class="container-column book-meta margin-rem gap-half" >

@@ -1,13 +1,14 @@
 import type {Book} from "../types";
-import {BASE_URL} from "../config";
+import { get } from "../utils";
 
 export const useApiBooks = {
-    getBooks: async (count:number=10,cursor:number): Promise<{ books: Book[], cursor: number,count:number }> => {
-        const response = await fetch(`${BASE_URL}/book/books?count=${count}&cursor=${cursor}`);
-        return await response.json();
+    getBooksByList: async (book_ids: number[]) => {
+        let url = `/book/list?${book_ids.map(id=>`book_ids=${id}`).join('&')}`;
+        const {success,data,message} = await get<Book[]>(url);
+        return {success,data,message};
     },
     getTotalBookCount:async()=>{
-        const response = await fetch(`${BASE_URL}/book/total`);
-        return await response.json();
+        const  {success,data,message} = await get<{total:number}>('/book/total');
+        return {success,data:data?.total,message};
     }
 }

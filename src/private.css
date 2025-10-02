@@ -1,7 +1,19 @@
-
+:root {
+    --content-height: calc( 100vh - 50px );
+}
 .container-banner {
     width: 1200px;
 }
+.content-container {
+    width: 100%;
+    height: var(--content-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
 .header-container {
     justify-content: space-between;
     margin-bottom: 1rem;
