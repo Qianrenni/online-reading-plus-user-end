@@ -1,9 +1,9 @@
 <template>
     <div class=" content-container">
         <div class="login-container bg-card radius-rem">
-        <h3 class=" text-center">欢迎体验</h3>
+        <h3 class=" text-center">新用户注册</h3>
         <QFormText
-            type="email"
+            type="text"
             v-model="form.username"
             label="用户名"
             placeholder="请输入用户名"
@@ -16,6 +16,24 @@
             placeholder="请输入密码"
             name="password"
         />
+        <QFormText
+            type="password"
+            v-model="form.confirmPassword"
+            label="重复输入密码"
+            placeholder="再次输入密码"
+            name="confirmPassword"
+        />
+
+        <div class=" container-space-between">
+            <QFormText
+                type="email"
+                v-model="form.email"
+                label="邮箱"
+                placeholder="请输入邮箱"
+                name="email"
+            />
+            <QFormButton type="button" >验证邮箱</QFormButton>
+        </div> 
         <div class="login-captcha-container">
             <QFormText
                 type="text"
@@ -32,7 +50,7 @@
                 @click="refreshCaptcha" 
             />
         </div>
-        <QFormButton type="button" @click="login">登录</QFormButton>
+        <QFormButton type="button" @click="login">注册</QFormButton>
     </div>
     </div>
 </template>
@@ -41,11 +59,12 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useMessage } from 'qyani-components';
-
 const image = ref<string>('');
 const form = ref({
     username: '',
     password: '',
+    confirmPassword:'',
+    email:'',
     captcha: '',
     x_captcha_id: '',
 })

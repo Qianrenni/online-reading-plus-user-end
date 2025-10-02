@@ -9,7 +9,7 @@ defineOptions({
 <template>
   <div class="header-container container-align-center bg-card padding-24rem">
     <router-link to="/" class="link-primary hidden-768">
-      <h3>在线阅读</h3>
+      <h3>三味书屋</h3>
     </router-link>
     <div class="container gap-fourth">
       <div class="header-search">

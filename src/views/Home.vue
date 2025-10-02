@@ -9,7 +9,7 @@ defineOptions({
   name: 'Home'
 });
 const bookStore = useBookStore();
-const width = ref(200);
+const width = ref(window.innerWidth<768?150:200);
 useWindow.addResizeHandler((innerWidth,_) => {
   if (innerWidth < 768) {
     width.value = 150;

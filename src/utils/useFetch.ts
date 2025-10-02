@@ -37,7 +37,8 @@ export interface RequestResult<T = any> {
  */
 export async function request<T = any>(
   url: string,
-  options: RequestOptions = {}
+  options: RequestOptions = {},
+  showMessage: boolean = false,
 ): Promise<RequestResult<T>> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), defaultConfig.timeout)
@@ -57,23 +58,26 @@ export async function request<T = any>(
   const fullUrl = defaultConfig.baseURL + url
 
   try {
-    const response = await fetch(fullUrl, config)
-
-    clearTimeout(timeoutId)
-    const contentType = response.headers.get('content-type')
-    if (!contentType?.includes('application/json')) {
-      throw new Error('服务器返回非 JSON 格式')
-    }
+    const response = await fetch(fullUrl, config);
+    clearTimeout(timeoutId);
     if(response.status===429){
+      useMessage.error('请求频率过快，请稍后再试');
       return {
         success:false,
         data:null,
         message:'请求频率过快，请稍后再试'
       }
     }
+    const contentType = response.headers.get('content-type');
+    if (!contentType?.includes('application/json')) {
+      throw new Error('服务器返回非 JSON 格式');
+    }
     const result: { code: number; data: T; message?: string } = await response.json();
 
     const success = result.code === ResponseCode.SUCCESS;
+    if(showMessage&&!success){
+      useMessage.error(result.message??'请求失败'); 
+    }
     return {
       success,
       data: success ? result.data : null,
@@ -82,10 +86,12 @@ export async function request<T = any>(
   } catch (error) {
     clearTimeout(timeoutId)
     // 如果是 AbortError，说明是超时或手动取消
-    if (error instanceof Error && error.name === 'AbortError') {
-      error.message = '请求超时或已取消'
+    console.error(error);
+    return  {
+      success:false,
+      data:null,
+      message:(error as Error).message??'请求失败'
     }
-    throw error
   }
 }
 
