@@ -1,6 +1,7 @@
 // utils/request.ts
 import { useMessage } from 'qyani-components'
 import { BASE_URL } from '../config'
+import { useAuthStore } from '../store/useAuthStore'
 
 // 响应码枚举
 const ResponseCode =  {
@@ -11,7 +12,7 @@ const ResponseCode =  {
 // 默认配置
 const defaultConfig = {
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -22,6 +23,7 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: any // 允许传入普通对象，内部自动 stringify
 }
 
+const authStore = useAuthStore();
 // 请求返回结果类型
 export interface RequestResult<T = any> {
   success: boolean
@@ -45,8 +47,11 @@ export async function request<T = any>(
 
   const config: RequestInit = {
     method: 'GET',
-    headers: { ...defaultConfig.headers },
     ...options,
+    headers: { ...defaultConfig.headers, 
+              ...options.headers,
+              'Authorization':`${authStore.getTokenType} ${authStore.getAccessToken}`
+            },
     signal: controller.signal
   }
 
@@ -70,7 +75,12 @@ export async function request<T = any>(
     }
     const contentType = response.headers.get('content-type');
     if (!contentType?.includes('application/json')) {
-      throw new Error('服务器返回非 JSON 格式');
+      console.log(`error ${url} return not is json`);
+      return {
+        success:response.ok?true:false,
+        data:null,
+        message:response.ok?'请求成功':'请求失败'
+      };
     }
     const result: { code: number; data: T; message?: string } = await response.json();
 
@@ -90,20 +100,20 @@ export async function request<T = any>(
     return  {
       success:false,
       data:null,
-      message:(error as Error).message??'请求失败'
+      message:'网络错误,请稍后重试'
     }
   }
 }
 
 // 快捷方法
-export const get = <T = any>(url: string, config: RequestOptions = {}) =>
-  request<T>(url, { method: 'GET', ...config })
+export const get = <T = any>(url: string, config: RequestOptions = {},showMessage:boolean=false) =>
+  request<T>(url, { method: 'GET', ...config },showMessage)
 
-export const post = <T = any>(url: string, data?: any, config: RequestOptions = {}) =>
-  request<T>(url, { method: 'POST', body: data, ...config })
+export const post = <T = any>(url: string, data?: any, config: RequestOptions = {},showMessage:boolean=false) =>
+  request<T>(url, { method: 'POST', body: data, ...config },showMessage)
 
-export const put = <T = any>(url: string, data?: any, config: RequestOptions = {}) =>
-  request<T>(url, { method: 'PUT', body: data, ...config })
+export const put = <T = any>(url: string, data?: any, config: RequestOptions = {},showMessage:boolean=false) =>
+  request<T>(url, { method: 'PUT', body: data, ...config },showMessage)
 
-export const del = <T = any>(url: string, config: RequestOptions = {}) =>
-  request<T>(url, { method: 'DELETE', ...config })
+export const del = <T = any>(url: string, config: RequestOptions = {},showMessage:boolean=false) =>
+  request<T>(url, { method: 'DELETE', ...config },showMessage)

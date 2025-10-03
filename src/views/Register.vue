@@ -32,7 +32,10 @@
                 placeholder="请输入邮箱"
                 name="email"
             />
-            <QFormButton type="button" >验证邮箱</QFormButton>
+            <QFormButton type="button" @click="verifyEmail">
+                    <QLoading v-if="isVerifyEmail" type="spinner"/>
+                    <span v-else> 验证邮箱</span>
+            </QFormButton>
         </div> 
         <div class="login-captcha-container">
             <QFormText
@@ -47,10 +50,11 @@
                 :width="80"  
                 :height="30" 
                 :src="image"
+                :alt="'验证码'"
                 @click="refreshCaptcha" 
             />
         </div>
-        <QFormButton type="button" @click="login">注册</QFormButton>
+        <QFormButton type="button" @click="register" >注册</QFormButton>
     </div>
     </div>
 </template>
@@ -58,6 +62,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
+import { useValidate } from '../utils';
 import { useMessage } from 'qyani-components';
 const image = ref<string>('');
 const form = ref({
@@ -68,7 +73,47 @@ const form = ref({
     captcha: '',
     x_captcha_id: '',
 })
+const isVerifyEmail = ref(false);
 
+const verifyEmail = async () => {
+    if (isVerifyEmail.value){return;}
+    if (!useValidate.email(form.value.email)){
+        useMessage.error('邮箱格式不正确');
+        return ;
+    }
+    isVerifyEmail.value = true;
+    const {success,message} =await useApiAuth.verifyEmail(form.value.email);
+    isVerifyEmail.value = false;
+    if (success){
+        useMessage.success('发送成功，请到邮箱中验证');
+    }else{
+        useMessage.error(message);
+    }
+    
+};
+
+const register = async () => {
+    if (!useValidate.email(form.value.email)){
+        useMessage.error('邮箱格式不正确');
+        return ;
+    }
+    if (form.value.password !== form.value.confirmPassword){
+        useMessage.error('两次输入的密码不一致');
+        return ;
+    }
+    const {success,message} =await useApiAuth.register(
+        form.value.username,
+        form.value.password,
+        form.value.email,
+        form.value.captcha,
+        form.value.x_captcha_id
+    );
+    if (success){
+        useMessage.success('注册成功，请登录');
+    }else{
+        useMessage.error(message);
+    }
+};
 const refreshCaptcha = async () => {
     if (image.value){
         URL.revokeObjectURL(image.value);
@@ -77,19 +122,6 @@ const refreshCaptcha = async () => {
     form.value.x_captcha_id = x_captcha_id!;
     image.value = imageUrl;
 };
-const login = async () => {
-    const {success,message,data} = await useApiAuth.login(
-        form.value.username,
-        form.value.password,
-        form.value.captcha,
-        form.value.x_captcha_id
-    );
-    if (success){
-
-    }else{
-        useMessage.error(message);
-    }
-}
 onMounted( async ()=>{
     refreshCaptcha();
 });
@@ -101,23 +133,5 @@ onBeforeUnmount(()=>{
 </script>
 
 <style scoped lang="css">
-.login-container{
-    display: flex;
-    margin: 0 auto;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    max-width: 400px;
-}
-.login-captcha-container{
-    display: flex;
-    gap: 0.2rem;
-    align-items:end;
-}
-@media screen and (max-width: 768px){
-    .login-container{
-        max-width: unset;
-    }
-    
-}
+
 </style>

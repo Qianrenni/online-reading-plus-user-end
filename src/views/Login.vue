@@ -32,7 +32,10 @@
                 @click="refreshCaptcha" 
             />
         </div>
-        <QFormButton type="button" @click="login">登录</QFormButton>
+        <QFormButton type="button" @click="()=>run()">
+            <QLoading v-if="loading" type="spinner"/>
+            <span v-else>登录</span>
+        </QFormButton>
     </div>
     </div>
 </template>
@@ -41,7 +44,10 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useMessage } from 'qyani-components';
+import { UseLocalStorage, useWrapLoad } from '../utils';
+import router from '../route';
 
+const tokenStorage = new UseLocalStorage('token');
 const image = ref<string>('');
 const form = ref({
     username: '',
@@ -58,7 +64,7 @@ const refreshCaptcha = async () => {
     form.value.x_captcha_id = x_captcha_id!;
     image.value = imageUrl;
 };
-const login = async () => {
+const {loading,run}= useWrapLoad(async () => {
     const {success,message,data} = await useApiAuth.login(
         form.value.username,
         form.value.password,
@@ -66,11 +72,15 @@ const login = async () => {
         form.value.x_captcha_id
     );
     if (success){
-
+        useMessage.success('登录成功');
+        tokenStorage.setItem('access_token',data?.access_token);
+        tokenStorage.setItem('refresh_token',data?.refresh_token);
+        tokenStorage.setItem('type',data?.token_type);
+        router.back();
     }else{
         useMessage.error(message);
     }
-}
+})
 onMounted( async ()=>{
     refreshCaptcha();
 });
@@ -78,27 +88,8 @@ onBeforeUnmount(()=>{
     if (image.value){
         URL.revokeObjectURL(image.value);
     }
-})
+});
 </script>
 
 <style scoped lang="css">
-.login-container{
-    display: flex;
-    margin: 0 auto;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    max-width: 400px;
-}
-.login-captcha-container{
-    display: flex;
-    gap: 0.2rem;
-    align-items:end;
-}
-@media screen and (max-width: 768px){
-    .login-container{
-        max-width: unset;
-    }
-    
-}
 </style>
