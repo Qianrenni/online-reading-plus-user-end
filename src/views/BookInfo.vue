@@ -64,7 +64,7 @@
                     </div>
                     <span class=" text-primary mouse-cursor" @click="showFastCatalog=!showFastCatalog">{{showFastCatalog?'收起':'展开' }}</span>
                 </div>
-                <div v-if="showFastCatalog" class="book-info-fast-catalog-list scroll-container ">
+                <div v-show="showFastCatalog" class="book-info-fast-catalog-list scroll-container ">
                     <p v-for="item in catalog" class="book-info-fast-catalog-item text-secondary text-one-line  mouse-cursor opacity-6-hover">
                         {{item.title}}
                     </p>
