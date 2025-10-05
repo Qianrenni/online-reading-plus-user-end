@@ -37,7 +37,7 @@
                     </p>
                     <div class=" container gap">
                         <QFormButton type="button">开始阅读</QFormButton>
-                        <QFormButton type="button" class=" button-outline">加入书架</QFormButton>
+                        <QFormButton type="button" class="button-outline">加入书架</QFormButton>
                     </div>
                 </div>
             </div>
