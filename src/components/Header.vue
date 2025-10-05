@@ -20,15 +20,15 @@ defineOptions({
           <QIcon icon="House" size="16" />
           <h4 class="hidden-768">首页</h4>
         </router-link>
-        <router-link to="book-store" class="link-primary container gap-fourth ">
+        <router-link to="/book-shelf" class="link-primary container gap-fourth ">
           <QIcon icon="Copy" size="16" />
-          <h4 class="hidden-768">书城</h4>
+          <h4 class="hidden-768">书架</h4>
         </router-link>
-        <router-link to="book-shelf" class="link-primary container gap-fourth ">
+        <router-link to="/history" class="link-primary container gap-fourth ">
           <QIcon icon="History" size="16" />
            <h4 class="hidden-768">历史记录</h4>
         </router-link>
-        <router-link to="personal-center" class="link-primary container gap-fourth ">
+        <router-link to="/personal-center" class="link-primary container gap-fourth ">
           <QIcon icon="User" size="16" />
            <h4 class="hidden-768"> 个人中心</h4>
         </router-link>

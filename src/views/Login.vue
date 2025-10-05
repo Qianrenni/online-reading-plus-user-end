@@ -32,10 +32,17 @@
                 @click="refreshCaptcha" 
             />
         </div>
+        <div class=" container-space-between">
+            <QFormCheckboxGroup :options="[{label:'记住我',value:'remember'}]" v-model="form.remember"/>
+            <RouterLink to="/forget-password" class=" link-primary">忘记密码?</RouterLink>
+        </div>
         <QFormButton type="button" @click="()=>run()">
             <QLoading v-if="loading" type="spinner"/>
             <span v-else>登录</span>
         </QFormButton>
+        <div class=" container-space-between">
+            <RouterLink to="/register" class=" link-primary">没有账号?立即注册</RouterLink>
+        </div>
     </div>
     </div>
 </template>
@@ -44,16 +51,20 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useMessage } from 'qyani-components';
-import { UseLocalStorage, useWrapLoad } from '../utils';
+import { useWrapLoad } from '../utils';
+import { useAuthStore } from '../store';
 import router from '../route';
-
-const tokenStorage = new UseLocalStorage('token');
+const authStore = useAuthStore();
+if(authStore.isLogin){
+    router.push('/');
+}
 const image = ref<string>('');
 const form = ref({
     username: '',
     password: '',
     captcha: '',
     x_captcha_id: '',
+    remember: []
 })
 
 const refreshCaptcha = async () => {
@@ -73,14 +84,21 @@ const {loading,run}= useWrapLoad(async () => {
     );
     if (success){
         useMessage.success('登录成功');
-        tokenStorage.setItem('access_token',data?.access_token);
-        tokenStorage.setItem('refresh_token',data?.refresh_token);
-        tokenStorage.setItem('type',data?.token_type);
-        router.back();
+        authStore.setRemeber(form.value.remember.length>0);
+        authStore.setToken(data?.access_token!,data?.refresh_token!,data?.token_type!);
+        authStore.setUser(data?.user!);
+        if(authStore.redictUrl!==null){
+            const url = authStore.redictUrl;
+            authStore.setRedictUrl(null);
+            router.replace(url);
+        }else{
+            router.back();
+        }
     }else{
         useMessage.error(message);
     }
-})
+});
+
 onMounted( async ()=>{
     refreshCaptcha();
 });

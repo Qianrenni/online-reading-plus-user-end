@@ -23,7 +23,6 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: any // 允许传入普通对象，内部自动 stringify
 }
 
-const authStore = useAuthStore();
 // 请求返回结果类型
 export interface RequestResult<T = any> {
   success: boolean
@@ -44,13 +43,13 @@ export async function request<T = any>(
 ): Promise<RequestResult<T>> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), defaultConfig.timeout)
-
+  const authStore = useAuthStore();
   const config: RequestInit = {
     method: 'GET',
     ...options,
     headers: { ...defaultConfig.headers, 
+              'Authorization':`${authStore.getTokenType} ${authStore.getAccessToken}`, 
               ...options.headers,
-              'Authorization':`${authStore.getTokenType} ${authStore.getAccessToken}`
             },
     signal: controller.signal
   }

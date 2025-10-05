@@ -8,7 +8,7 @@ export const  useApiAuth = {
         return {success,data:data?.user,message};
     },
     login:async(username:string,password:string,captcha:string,x_captcha_id:string)=>{
-        const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string}>(
+        const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/get',
             {
                 'username':username,
@@ -24,7 +24,7 @@ export const  useApiAuth = {
         return {success,data,message};
     },
     refreshToken:async(refresh_token:string)=>{
-        const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string}>(
+        const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/refresh',
             {},
             {
