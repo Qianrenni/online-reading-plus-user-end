@@ -1,6 +1,9 @@
 :root {
     --content-height: calc( 100vh - 50px );
 }
+.container-row-768-column{
+    display: flex;
+}
 .container-banner {
     width: 1200px;
 }
@@ -22,6 +25,10 @@
     width: 300px;
 }
 @media  screen and (max-width: 768px) {
+    .container-row-768-column{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
     .header-search {
         width: min-content;
     }
@@ -90,3 +97,91 @@
     }
     
 }
+.book-info-container {
+    max-width: 1100px;
+    display: flex;
+    gap:2rem;
+    margin: 0 auto;
+    margin-top: 3rem;
+}
+.book-info-container-center {
+    max-width: 750px;
+    display: flex;
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+    gap:1rem;
+
+    overflow: hidden;
+}
+.book-info-container-center .book-info-meta {
+
+    max-width: 500px;
+    width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap:0.5rem;
+}
+.book-info-container-center .book-info-meta .book-info-meta-category{
+    width: fit-content;
+    background-color: #DBEAFE;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #515455;
+}
+.book-info-container .tab-item{
+    flex: 1;
+    text-align: center;
+}
+.book-info-catalog{
+    max-height: 280px;
+}
+.book-info-catalog-item{
+    padding: 1rem 2rem;
+}
+.book-info-fast-catalog {
+    max-width: 320px;
+    width: 320px;
+    padding: 1rem 0 1rem 1.5rem ;
+    margin-bottom: 2rem;
+}
+.book-info-fast-catalog .text-primary{
+    margin-right: 1.5rem;
+}
+.book-info-fast-catalog-item {
+    margin: 0.5rem 0;
+}
+.book-info-description{
+    padding: 0.2rem 1rem;
+    min-height: 150px;
+}
+.book-info-fast-catalog-list {
+    max-height: 300px;
+}
+@media screen and (max-width: 768px){
+    .book-info-container-center {
+        max-width: unset;
+        padding: 1rem 0.5rem;
+    }
+    .book-info-container {
+        max-width: unset;
+        width: 100%;
+    }
+   .book-info-container-center .book-info-meta {
+        flex: 1;
+   }
+   .book-info-catalog-item {
+       padding: 0.5rem 1rem;
+   }
+   .book-info-description {
+       min-height: unset;
+   }
+   .book-info-fast-catalog {
+    max-width: unset;
+    width: 100%;
+   }
+}
+
+

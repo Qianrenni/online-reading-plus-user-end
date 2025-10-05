@@ -1,4 +1,4 @@
-import type {Book} from "../types";
+import type {Book, Catalog} from "../types";
 import { get } from "../utils";
 
 export const useApiBooks = {
@@ -10,5 +10,13 @@ export const useApiBooks = {
     getTotalBookCount:async()=>{
         const  {success,data,message} = await get<{total:number}>('/book/total');
         return {success,data:data?.total,message};
+    },
+    getBookById:async(id:number)=>{
+        const {success,data,message} = await get<Book>(`/book/${id}`,undefined,true);
+        return {success,data,message};
+    },
+    getCatalogById:async(id:number)=>{
+        const {success,data,message} = await get<Catalog[]>(`/book/toc/${id}`,undefined,true);
+        return {success,data,message};
     }
 }

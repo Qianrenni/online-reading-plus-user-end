@@ -54,6 +54,9 @@ import { useMessage } from 'qyani-components';
 import { useWrapLoad } from '../utils';
 import { useAuthStore } from '../store';
 import router from '../route';
+defineOptions({
+    name: 'Login'
+});
 const authStore = useAuthStore();
 if(authStore.isLogin){
     router.push('/');

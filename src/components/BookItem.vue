@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRouter } from "vue-router";
 import type {Book} from "../types";
 
 defineOptions({
@@ -8,7 +9,8 @@ defineProps<{
   book: Book;
   width: number;
   height: number;
-}>()
+}>();
+const router = useRouter();
 </script>
 
 <template>
@@ -20,7 +22,7 @@ defineProps<{
       <div class="container-column book-meta margin-rem gap-half" >
         <h4 class="text-one-line">{{book.name}}</h4>
         <h6 class="text-one-line">作者: {{book.author}}</h6>
-        <QFormButton>开始阅读</QFormButton>
+        <QFormButton type="button" @click="()=>router.push(`/book-detail/${book.id}`)" >开始阅读</QFormButton>
       </div>
     </template>
   </QCard>

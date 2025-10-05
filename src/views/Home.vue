@@ -27,7 +27,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <QScrollContainer
+  <KeepAlive>
+    <QScrollContainer
       scoll-y
       ref="home-container"
                     class="container-banner scroll-container home-container" @ended="bookStore.addBook()">
@@ -36,4 +37,5 @@ onBeforeMount(() => {
         :book="book" :width="width" :height="width"/>
     <QLoading style="height: 100px;" :show="bookStore.loading" class="container-w100" type="skeleton"/>
   </QScrollContainer>
+  </KeepAlive>
 </template>

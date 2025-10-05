@@ -17,3 +17,8 @@ export interface User {
     avatar: string;
     is_active: boolean;
 }
+
+export interface Catalog {
+    id: number;
+    title: string;
+}
