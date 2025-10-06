@@ -34,6 +34,11 @@ const routes = [
     path:'/book-detail/:id',
     name:'BookDetail',
     component: () => import('./views/BookInfo.vue'),
+  },
+  {
+    path:'/book-read/:bookId/:contentId',
+    name:'BookRead',
+    component: () => import('./views/BookRead.vue'),
   }
 ];
 const router = createRouter({

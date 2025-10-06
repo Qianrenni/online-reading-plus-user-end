@@ -7,7 +7,16 @@ export const  useApiAuth = {
         const {success,data,message} = await get<{user:User}>('/token/auth/me');
         return {success,data:data?.user,message};
     },
-    login:async(username:string,password:string,captcha:string,x_captcha_id:string)=>{
+    login:async(username:string,password:string,captcha:string,x_captcha_id:string):Promise<{
+        success:boolean,
+        data:{
+            access_token:string,
+            refresh_token:string,
+            token_type:string,
+            user:User
+        }|null,
+        message:string
+    }>=>{
         const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/get',
             {
@@ -23,7 +32,16 @@ export const  useApiAuth = {
         );
         return {success,data,message};
     },
-    refreshToken:async(refresh_token:string)=>{
+    refreshToken:async(refresh_token:string):Promise<{
+        success:boolean,
+        data:{
+            access_token:string,
+            refresh_token:string,
+            token_type:string,
+            user:User
+        }|null,
+        message:string
+    }>=>{
         const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/refresh',
             {},

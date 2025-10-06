@@ -22,3 +22,12 @@ export interface Catalog {
     id: number;
     title: string;
 }
+
+export interface ReadSettings {
+    fontSize: string;
+    lineHeight: string;
+    letterSpacing: string;
+    fontFamily: string;
+    color: string;
+    backgroundColor: string;
+}

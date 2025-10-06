@@ -45,8 +45,14 @@ export const useAuthStore = defineStore('auth', {
         if(success){
           this.setUser(data!);
         }else{
-          this.clearToken();
-          console.error(message);
+          const {success,data,message} = await useApiAuth.refreshToken(this.refreshToken!);
+          if(success){
+            this.setToken(data!.access_token,data!.refresh_token,data!.token_type);
+          }else{
+            this.clearToken();
+            this.clearUser();
+            console.error(message);
+          }
         }
       }
     },

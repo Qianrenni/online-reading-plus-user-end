@@ -45,6 +45,9 @@ export const useBookStore = defineStore('book', {
             this.loading = false;
         },
         async getBookById(id:number):Promise<Book>{
+            if (this.book?.id===id){
+                return this.book!
+            }
             const index = this.books.findIndex(book=>book.id===id);
             if(index>=0){
                 this.book = this.books[index];
@@ -74,6 +77,10 @@ export const useBookStore = defineStore('book', {
                 return data!;
             }
             return [];
+        },
+        async getBookChapterById(id:number){
+            const {success,data,message} = await useApiBooks.getBookChapterById(id);
+            return data||''
         }
     }
 })

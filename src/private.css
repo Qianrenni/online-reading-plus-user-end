@@ -1,8 +1,26 @@
 :root {
     --content-height: calc( 100vh - 50px );
 }
+.mouse-cursor{
+    user-select: none;
+}
+body{
+    font-family: Arial, PingFangSC-Regular, Microsoft Yahei, "Source Han Serif SC", SimSun;
+}
 body.dark-mode .button-outline {
     border:1px solid var(--primary-color);
+}
+pre {
+    width: 100%;
+    overflow: scroll;
+}
+pre::-webkit-scrollbar{
+    width: 8px;
+    height: 8px;
+    background-color: var(--background-color);
+}
+pre::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
 }
 .container-row-768-column{
     display: flex;
@@ -190,4 +208,59 @@ body.dark-mode .button-outline {
    }
 }
 
+.book-read-container{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem 1rem 1rem;
+    display: flex;
+    justify-content: center;
+}
+.book-read-content {
+    max-width: 700px;
+}
+.book-read-sidebar{
+    position: fixed;
+    top: 50%;
+    left:calc( 50vw + 450px );
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.book-read-sidebar-item {
+    padding: 0.25rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+    user-select: none;
+}
+.book-read-sidebar-item:hover {
+    color: var(--primary-color);
+}
+.book-read-catalog-container {
+    min-width: 480px;
+    padding: 0.5rem 1rem;
+}
+.book-read-catalog{
+    margin-top: 1rem;
+    max-height: calc( 100vh - 6.8rem);
+}
+.book-read-catalog-item {
+    padding: 0.5rem 0;
+}
+.active-primary {
+    color: var(--background-color);
+    background-color: var(--color-inverse);
+}
+@media  screen and (max-width: 768px){
+
+    .book-read-container{
+        max-width: unset;
+        width: 100%;
+    }
+    .book-read-content {
+        max-width: unset;
+        width: 100%;
+    }
+    
+}
 

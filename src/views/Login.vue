@@ -47,7 +47,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useMessage } from 'qyani-components';
@@ -102,6 +102,18 @@ const {loading,run}= useWrapLoad(async () => {
     }
 });
 
+watch(
+    ()=>authStore.isLogin,
+    ()=>{
+        if(authStore.redictUrl!==null){
+            const url = authStore.redictUrl;
+            authStore.setRedictUrl(null);
+            router.replace(url);
+        }else{
+            router.back();
+        }
+    }
+)
 onMounted( async ()=>{
     refreshCaptcha();
 });

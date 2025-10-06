@@ -49,7 +49,10 @@
                     <p class="text-secondary">{{book.description}}</p>
                 </div>
                 <div v-if="tabIndex===1" class="book-info-catalog scroll-container">
-                    <p v-for="item in catalog" class="book-info-catalog-item text-secondary text-one-line mouse-cursor opacity-6-hover">
+                    <p v-for="item in catalog" 
+                        class="book-info-catalog-item text-secondary text-one-line mouse-cursor opacity-6-hover"
+                        @click="()=>router.push(`/book-read/${book.id}/${item.id}`)"
+                        >
                         {{item.title}}
                     </p>
                 </div>

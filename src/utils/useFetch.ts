@@ -2,6 +2,7 @@
 import { useMessage } from 'qyani-components'
 import { BASE_URL } from '../config'
 import { useAuthStore } from '../store/useAuthStore'
+import { useApiAuth } from '../api/auth'
 
 // 响应码枚举
 const ResponseCode =  {
@@ -70,6 +71,24 @@ export async function request<T = any>(
         success:false,
         data:null,
         message:'请求频率过快，请稍后再试'
+      }
+    }
+    if(response.status===401){
+      if (authStore.getRefreshToken===null){
+        return {
+          success:false,
+          data:null,
+          message:'请先登录'
+        }
+      }
+      const {success,data,message}= await useApiAuth.refreshToken(authStore.getRefreshToken);
+      if(success){
+        authStore.setToken(data!.access_token,data!.refresh_token,data!.token_type);
+        authStore.setUser(data!.user);
+        return request(url,options,showMessage);
+      }else{
+        authStore.clearToken();
+        authStore.clearUser();
       }
     }
     const contentType = response.headers.get('content-type');

@@ -18,5 +18,9 @@ export const useApiBooks = {
     getCatalogById:async(id:number)=>{
         const {success,data,message} = await get<Catalog[]>(`/book/toc/${id}`,undefined,true);
         return {success,data,message};
+    },
+    getBookChapterById:async(id:number)=>{
+        const {success,data,message} = await get<string>(`/book/chapter/${id}`,undefined,true);
+        return {success,data,message};
     }
 }

@@ -24,9 +24,9 @@ const authStore = useAuthStore();
 * */
 router.beforeEach((to, from, next) => {
 
-  if (includePaths.includes(to.path)&&!authStore.isLogin){
+  if (includePaths.filter((path)=>to.path.startsWith(path)).length>0&&!authStore.isLogin){
     authStore.setRedictUrl(to.fullPath);
-    router.push('login');
+    router.push('/login')
   }    
   next();
   
