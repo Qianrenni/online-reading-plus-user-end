@@ -2,6 +2,7 @@
     <div class="book-read-container bg-card">
         <QLoading v-show="loading" style="height: calc( 100vh - 4rem );width: 100%;" type="skeleton"/>
         <div v-show="!loading" v-html="content" class="book-read-content" 
+        @click="shwoBottomSettings=true"
         :style="{
             fontSize: readSettings.fontSize,
             fontFamily: readSettings.fontFamily,
@@ -12,6 +13,18 @@
         }"
          />
         <div class="book-read-sidebar bg-card hidden-768">
+            <div class=" container-column container-align-center book-read-sidebar-item  "
+            @click="currentContentIndex>0?run(computeCatalog[currentContentIndex-1].id):void(0)"
+            >
+                <QIcon icon="Up" size="24px"/>
+                <span class=" text-08rem">上一章</span>
+            </div>
+            <div class=" container-column container-align-center book-read-sidebar-item  "
+            @click="currentContentIndex<computeCatalog.length-1?run(computeCatalog[currentContentIndex+1].id):void(0)"
+            >
+                <QIcon icon="Down" size="24px"/>
+                <span class=" text-08rem">下一章</span>
+            </div>
             <div class=" container-column container-align-center book-read-sidebar-item  "
                 @click="showCatalog = true"
             >
@@ -63,6 +76,39 @@
             </div>
         </div>
         </QDrawer>
+        <QDrawer 
+            :visible="shwoBottomSettings&&isCanShowBottomSettings"
+            direction="bottom"
+            :close-on-click-overlay="true"
+            @close="shwoBottomSettings=false"
+        >
+            <div class=" container-space-between"
+            @click="shwoBottomSettings=false"
+            >
+                <div class=" container-column container-align-center book-read-sidebar-item  "
+                @click="currentContentIndex>0?run(computeCatalog[currentContentIndex-1].id):void(0)"
+                >
+                    <QIcon icon="Up" size="24px"/>
+                    <span class=" text-08rem">上一章</span>
+                </div>
+                <div class=" container-column container-align-center book-read-sidebar-item  "
+                @click="currentContentIndex<computeCatalog.length-1?run(computeCatalog[currentContentIndex+1].id):void(0)"
+                >
+                    <QIcon icon="Down" size="24px"/>
+                    <span class=" text-08rem">下一章</span>
+                </div>
+                <div class=" container-column container-align-center book-read-sidebar-item  "
+                    @click="showCatalog = true"
+                >
+                    <QIcon icon="Catalog" size="24px"/>
+                    <span class=" text-08rem">目录</span>
+                </div>
+                <div class=" container-column container-align-center book-read-sidebar-item ">
+                    <QIcon icon="Setting" size="24px"/>
+                    <span class=" text-08rem">阅读设置</span>
+                </div>
+            </div>
+        </QDrawer>
     </div>
 </template>
 
@@ -73,6 +119,7 @@ import { useBookStore } from '../store';
 import router from '../route';
 import { applySpacingToHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
+import { useWindowResize } from 'qyani-components';
 
 
 const book = ref<Book>({} as Book);
@@ -85,6 +132,11 @@ const currentContentId = ref<number>(-1);
 const currentContentIndex= computed(()=>{
     return catalog.value.findIndex(item=>item.id===currentContentId.value);
 });
+const shwoBottomSettings = ref<boolean>(false);
+const isCanShowBottomSettings = ref<boolean>(window.innerWidth<768);
+useWindowResize.addHandler((width,_)=>{
+    isCanShowBottomSettings.value = width<768;
+})
 const computeCatalog = computed(( )=>{
     if(catalogAscOrder.value){
         return catalog.value;

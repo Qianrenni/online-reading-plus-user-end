@@ -29,7 +29,7 @@ onBeforeMount(() => {
 <template>
   <KeepAlive>
     <QScrollContainer
-      scoll-y
+      scroll-Y
       ref="home-container"
                     class="container-banner scroll-container home-container" @ended="bookStore.addBook()">
     <BookItem

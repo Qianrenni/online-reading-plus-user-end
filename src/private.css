@@ -239,6 +239,7 @@ pre::-webkit-scrollbar-thumb {
 .book-read-catalog-container {
     min-width: 480px;
     padding: 0.5rem 1rem;
+    padding-top: 2.5rem;
 }
 .book-read-catalog{
     margin-top: 1rem;
@@ -261,6 +262,9 @@ pre::-webkit-scrollbar-thumb {
         max-width: unset;
         width: 100%;
     }
-    
+    .book-read-catalog-container{
+        min-width: unset;
+        max-width: 70vw;
+    }
 }
 
