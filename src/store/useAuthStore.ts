@@ -41,18 +41,9 @@ export const useAuthStore = defineStore('auth', {
       const token = this.getTokenLocalStorage.getItem('token');
       if(token){
         this.setToken(token.accessToken,token.refreshToken,token.tokenType);
-        const {success,data,message} = await useApiAuth.authMe();
+        const {success,data} = await useApiAuth.authMe();
         if(success){
           this.setUser(data!);
-        }else{
-          const {success,data,message} = await useApiAuth.refreshToken(this.refreshToken!);
-          if(success){
-            this.setToken(data!.access_token,data!.refresh_token,data!.token_type);
-          }else{
-            this.clearToken();
-            this.clearUser();
-            console.error(message);
-          }
         }
       }
     },
@@ -87,8 +78,6 @@ export const useAuthStore = defineStore('auth', {
         this.setToken(data!.access_token,data!.refresh_token,data!.token_type);
       }else{
         console.error(message);
-        this.clearToken();
-        this.clearUser();
       }
     },
     setRedictUrl(url:string|null){

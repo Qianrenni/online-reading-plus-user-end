@@ -71,6 +71,7 @@ pre::-webkit-scrollbar-thumb {
 }
 .book-card {
     width: 200px;
+    height: min-content;
     margin: 1rem 18px;
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;

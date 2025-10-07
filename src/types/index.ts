@@ -31,3 +31,11 @@ export interface ReadSettings {
     color: string;
     backgroundColor: string;
 }
+
+export interface BookReadingProgress {
+    id: number;
+    book_id: number;
+    last_chapter_id: number;
+    last_position: number;
+    last_read_at: string;
+}

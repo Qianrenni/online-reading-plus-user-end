@@ -20,7 +20,7 @@ useWindow.addResizeHandler((innerWidth,_) => {
 
 
 onBeforeMount(() => {
-  if(bookStore.books.length==0){
+  if(bookStore.books.length<=1){
     bookStore.addBook();
   }
 });

@@ -15,7 +15,7 @@ export const  useApiAuth = {
             token_type:string,
             user:User
         }|null,
-        message:string
+        message:string|null
     }>=>{
         const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/get',
@@ -40,7 +40,7 @@ export const  useApiAuth = {
             token_type:string,
             user:User
         }|null,
-        message:string
+        message:string| null
     }>=>{
         const {success,data,message} = await post<{access_token:string,refresh_token:string,token_type:string,user:User}>(
             '/token/refresh',
