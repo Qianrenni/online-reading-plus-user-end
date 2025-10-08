@@ -33,7 +33,6 @@ export interface ReadSettings {
 }
 
 export interface BookReadingProgress {
-    id: number;
     book_id: number;
     last_chapter_id: number;
     last_position: number;

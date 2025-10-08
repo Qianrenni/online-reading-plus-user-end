@@ -123,6 +123,7 @@ import router from '../route';
 import { applySpacingToHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
 import { useWindowResize } from 'qyani-components';
+import { useApiBookReadingProgress } from '../api/bookReadingProgress';
 
 
 const book = ref<Book>({} as Book);
@@ -164,11 +165,15 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
     const rawContent = await bookStore.getBookChapterById(id);
     content.value = applySpacingToHtml(rawContent);
     currentContentId.value = id;
+    setTimeout(async ()=>{
+        useApiBookReadingProgress.update(book.value.id,id,currentContentIndex.value+1);
+    },0);
 });
 onBeforeMount(async () => {
     try{
         const bookId = parseInt(router.currentRoute.value.params.bookId as string);
         const contentId = parseInt(router.currentRoute.value.params.contentId as string);
+        book.value.id=bookId;
         const [rawBook,rawCatalog,_] = await Promise.all([
             bookStore.getBookById(bookId),
             bookStore.getCatalogById(bookId),

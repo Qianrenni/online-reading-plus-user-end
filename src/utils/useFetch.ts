@@ -135,3 +135,6 @@ export const put = <T = any>(url: string, data?: any, config: RequestOptions = {
 
 export const del = <T = any>(url: string, config: RequestOptions = {},showMessage:boolean=false) =>
   request<T>(url, { method: 'DELETE', ...config },showMessage)
+
+export const patch = <T = any>(url: string, data?: any, config: RequestOptions = {},showMessage:boolean=false) =>
+  request<T>(url, { method: 'PATCH', body: data, ...config },showMessage)
