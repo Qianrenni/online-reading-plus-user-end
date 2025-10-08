@@ -1,5 +1,6 @@
 <template>
-    <div class="book-read-container bg-card">
+    <div class=" container-w100 scroll-container" style="height: calc(100vh - 3.5rem);">
+        <div class="book-read-container bg-card scroll-container">
         <QLoading v-show="loading" style="height: calc( 100vh - 4rem );width: 100%;" type="skeleton"/>
         <div v-show="!loading" v-html="content" class="book-read-content" 
         @click="shwoBottomSettings=true"
@@ -110,6 +111,8 @@
             </div>
         </QDrawer>
     </div>
+    </div>
+    
 </template>
 
 <script setup lang="ts">

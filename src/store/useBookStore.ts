@@ -12,11 +12,16 @@ export const useBookStore = defineStore('book', {
         loading:false,
         book:null as Book|null,
         catalog:null as Catalog[]|null,
+        scrollTo:0,
     }),
     getters: {
         getBooks: (state) => state.books,
+        getScrollTo: (state) => state.scrollTo,
     },
     actions: {
+        setScrollTo(scrollTo:number){
+            this.scrollTo = scrollTo;
+        },
         async addBook() {
             if(this.total<0){
                 const {success,data,message} =  await useApiBooks.getTotalBookCount();
@@ -81,6 +86,20 @@ export const useBookStore = defineStore('book', {
         async getBookChapterById(id:number){
             const {success,data,message} = await useApiBooks.getBookChapterById(id);
             return data||''
+        },
+        async getBookByList(book_ids:number[]){
+            const booksFinded = this.books.filter(book=>book_ids.includes(book.id));
+            const booksNotFinded = book_ids.filter(bookId=>!booksFinded.some(book=>book.id===bookId));
+            if(booksNotFinded.length>0){
+                const {success,data,message} = await useApiBooks.getBooksByList(booksNotFinded);
+                if(success){
+                    this.books.push(...data!);
+                    booksFinded.push(...data!);
+                }else{
+                    console.error(message);
+                }
+            }
+            return booksFinded;
         }
     }
 })
