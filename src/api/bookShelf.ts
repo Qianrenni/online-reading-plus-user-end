@@ -5,13 +5,21 @@ export const useApiBookShelf  = {
         const {success,data,message} = await post(
             `/shelf/add`,
             {
-                bookId
+                'book_id':bookId
             }
         );
         return {success,data,message}
     },
-    get:async ()=>{
-        const {success,data,message} = await get(
+    get:async ():Promise<
+        {
+            success:boolean;
+            data:{book_id:number;created_at:string}[]|null;
+            message:string|null;
+        }>=>{
+        const {success,data,message} = await get<{
+            book_id:number;
+            created_at:string;
+        }[]>(
             `/shelf/get`,
         );
         return {success,data,message}   

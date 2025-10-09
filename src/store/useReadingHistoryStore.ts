@@ -51,6 +51,15 @@ export const useReadingHistoryStore = defineStore('readingHistory', {
 
             }
 
+        },
+        async getSingle(bookId:number){
+            if (this.readingHistory.length<=0){
+                await this.get();
+            }
+            return this.readingHistory.find(item=>item.book_id===bookId);
+        },
+        isInHistory(bookId:number){
+            return this.readingHistory.findIndex(item=>item.book_id===bookId)!==-1;
         }
     }
 });

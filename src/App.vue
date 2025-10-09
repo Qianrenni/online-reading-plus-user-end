@@ -10,7 +10,11 @@ import Header from './components/Header.vue';
 import { includePaths } from './config';
 import router from './route';
 import { useAuthStore } from './store';
+import { useBookShelfStore } from './store/useBookShelf';
+import { useReadingHistoryStore } from './store/useReadingHistoryStore';
 const authStore = useAuthStore();
+const shelfStore = useBookShelfStore();
+const historyStore = useReadingHistoryStore();
 /*
 * 路由守卫
 * params:
@@ -31,8 +35,15 @@ router.beforeEach((to, from, next) => {
   next();
   
 });
+
 onBeforeMount( async () => {
   await authStore.initial();
+  if(authStore.isLogin){
+    await Promise.all([
+      shelfStore.get(),
+      historyStore.get()
+    ])
+  }
 });
 </script>
 <style scoped lang="css">

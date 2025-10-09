@@ -38,3 +38,4 @@ export interface BookReadingProgress {
     last_position: number;
     last_read_at: string;
 }
+export type ShelfItem = Book & Partial<BookReadingProgress>;

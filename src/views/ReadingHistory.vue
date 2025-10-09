@@ -22,7 +22,9 @@
                         <QProgressBar :percent="`${histortItem.last_position*100/histortItem.total_chapter}px`"/>
                     </div>
                 </div>
-                <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.book_id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
+                <div>
+                    <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.book_id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
+                </div>
             </div>
 
         </div>
