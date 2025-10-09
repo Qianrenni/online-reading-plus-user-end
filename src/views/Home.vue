@@ -21,9 +21,7 @@ useWindow.addResizeHandler((innerWidth,_) => {
 
 
 onBeforeMount(() => {
-  if(bookStore.books.length<=1){
     bookStore.addBook();
-  }
 });
 onMounted(() => {
   refScrollContainer.value?.scrollTo({top:bookStore.scrollTo,behavior:'smooth'});

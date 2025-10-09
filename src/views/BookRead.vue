@@ -124,6 +124,7 @@ import { applySpacingToHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
 import { useWindowResize } from 'qyani-components';
 import { useApiBookReadingProgress } from '../api/bookReadingProgress';
+import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 
 
 const book = ref<Book>({} as Book);
@@ -166,7 +167,7 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
     content.value = applySpacingToHtml(rawContent);
     currentContentId.value = id;
     setTimeout(async ()=>{
-        useApiBookReadingProgress.update(book.value.id,id,currentContentIndex.value+1);
+        useReadingHistoryStore().update(book.value.id,id,currentContentIndex.value+1);
     },0);
 });
 onBeforeMount(async () => {

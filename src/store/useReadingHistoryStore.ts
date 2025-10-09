@@ -1,9 +1,56 @@
 import {defineStore} from 'pinia'
-import type { BookReadingProgress } from '../types';
+import type { Book, BookReadingProgress } from '../types';
+import { useApiBookReadingProgress } from '../api/bookReadingProgress';
+import { useBookStore } from './useBookStore';
+
+type HistoryItem = BookReadingProgress & Book;
 
 export const useReadingHistoryStore = defineStore('readingHistory', {
     state: () => ({
-        readingHistory:[] as BookReadingProgress[]
-    })
+        readingHistory:[] as HistoryItem[]
+    }),
+    getters:{
+        getReadingHistory: (state) => state.readingHistory,
+    },
+    actions:{
+        async get(){
+            if(this.readingHistory.length>0){
+                return;
+            }
+            const {success,data} = await useApiBookReadingProgress.get();
+            if(success){
+                const bookStore = useBookStore();
+                const books = await bookStore.getBookByList(data!.map(item=>item.book_id));
+                const historyItems = data!.map(item=>({
+                    ...item,
+                    ...books.find(book=>book.id===item.book_id)
+                }));
+                this.readingHistory = historyItems as HistoryItem[];
+            }
+        },
+        async update(bookId:number,chapterId:number,last_position:number=0){
+            const index = this.readingHistory.findIndex(item=>item.book_id===bookId);
+            if(index!==-1){
+                const [item] = this.readingHistory.splice(index,1);
+                item.last_chapter_id = chapterId;
+                item.last_position = last_position;
+                this.readingHistory.unshift(item);
+            }else{
+                const [responseProgress,responseBook] = await Promise.all([
+                    useApiBookReadingProgress.update(bookId,chapterId,last_position),
+                    useBookStore().getBookById(bookId)
+                ]);
+                if(responseProgress.success){
+                    this.readingHistory.unshift({
+                        ...responseBook,
+                        last_chapter_id:chapterId,
+                        last_position:last_position,
+                        last_read_at:new Date().toISOString()
+                    } as HistoryItem);
+                }
 
+            }
+
+        }
+    }
 });
