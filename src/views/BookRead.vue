@@ -71,6 +71,7 @@
                         run(item.id);
                         showCatalog=false;
                     }"
+                    :key="item.id"
                     >
                     {{item.title}}
                 </p>
@@ -123,7 +124,6 @@ import router from '../route';
 import { applySpacingToHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
 import { useWindowResize } from 'qyani-components';
-import { useApiBookReadingProgress } from '../api/bookReadingProgress';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 
 
@@ -139,6 +139,7 @@ const currentContentIndex= computed(()=>{
 });
 const shwoBottomSettings = ref<boolean>(false);
 const isCanShowBottomSettings = ref<boolean>(window.innerWidth<768);
+const readingHistoryStore = useReadingHistoryStore();
 useWindowResize.addHandler((width,_)=>{
     isCanShowBottomSettings.value = width<768;
 })
@@ -167,7 +168,7 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
     content.value = applySpacingToHtml(rawContent);
     currentContentId.value = id;
     setTimeout(async ()=>{
-        useReadingHistoryStore().update(book.value.id,id,currentContentIndex.value+1);
+        readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);
     },0);
 });
 onBeforeMount(async () => {
@@ -175,13 +176,25 @@ onBeforeMount(async () => {
         const bookId = parseInt(router.currentRoute.value.params.bookId as string);
         const contentId = parseInt(router.currentRoute.value.params.contentId as string);
         book.value.id=bookId;
-        const [rawBook,rawCatalog,_] = await Promise.all([
-            bookStore.getBookById(bookId),
-            bookStore.getCatalogById(bookId),
-            run(contentId)
-        ]);
-        book.value = rawBook;
-        catalog.value = rawCatalog;
+        if (contentId!==-1){
+            const [rawBook,rawCatalog,_] = await Promise.all([
+                bookStore.getBookById(bookId),
+                bookStore.getCatalogById(bookId),
+                run(contentId)
+            ]);
+            book.value = rawBook;
+            catalog.value = rawCatalog;
+        }else{
+            const [rawBook,rawCatalog] = await Promise.all([
+                bookStore.getBookById(bookId),
+                bookStore.getCatalogById(bookId),
+            ]);
+            catalog.value = rawCatalog;
+            book.value = rawBook;
+            if(catalog.value.length>0){
+                run(catalog.value[0].id);
+            }
+        }
     }catch(e){
         console.log(e);
     }

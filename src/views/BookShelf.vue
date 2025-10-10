@@ -1,6 +1,10 @@
 <template>
     <div class="reading-history-container">
-        <div v-for=" histortItem in shelfStore.getBookShelf " class=" bg-card reading-history-item shadow-black">
+        <div 
+            v-for=" histortItem in shelfStore.getBookShelf " 
+            class=" bg-card reading-history-item shadow-black"
+            :key="histortItem.id"
+        >
             <QLazyImage :src="histortItem.cover" :height="height" :width="width">
             </QLazyImage>
             <div class="reading-history-item-content">
@@ -22,7 +26,7 @@
                         <QProgressBar :percent="`${histortItem.last_position!*100/histortItem.total_chapter}px`"/>
                     </div>
                 </div>
-                <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.book_id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
+                <QFormButton  type="button" @click="()=>router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
             </div>
 
         </div>

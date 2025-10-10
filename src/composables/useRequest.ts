@@ -1,5 +1,5 @@
 // composables/useRequest.ts
-import { ref, onUnmounted, readonly, type Ref } from 'vue'
+import { ref, onUnmounted, readonly} from 'vue'
 import { request, type RequestResult } from '../utils'
 interface UseRequestOptions extends RequestInit {
   // 可扩展

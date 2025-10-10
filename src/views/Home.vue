@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useBookStore} from "../store/useBookStore.ts";
-import {onActivated, onBeforeMount, onMounted, onUpdated, ref, useTemplateRef} from "vue";
+import {onActivated, onBeforeMount, onMounted, ref, useTemplateRef} from "vue";
 import {useWindow} from "../utils/useWindow.ts";
 import BookItem from "../components/BookItem.vue";
 import type {QScrollContainer} from "qyani-components";
@@ -38,7 +38,7 @@ onActivated(() => {
       ref="home-container"
       class="container-banner scroll-container home-container" 
       @ended="bookStore.addBook()"
-      @scroll="({x,y}:{x:number,y:number})=>bookStore.setScrollTo(y)"
+      @scroll="({y}:{y:number})=>bookStore.setScrollTo(y)"
       >
     <BookItem
         v-for="book in bookStore.getBooks" :key="book.id"

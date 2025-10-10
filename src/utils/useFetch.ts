@@ -81,7 +81,7 @@ export async function request<T = any>(
           message:'请先登录'
         }
       }
-      const {success,data,message}= await useApiAuth.refreshToken(authStore.getRefreshToken);
+      const {success,data}= await useApiAuth.refreshToken(authStore.getRefreshToken);
       if(success){
         authStore.setToken(data!.access_token,data!.refresh_token,data!.token_type);
         authStore.setUser(data!.user);

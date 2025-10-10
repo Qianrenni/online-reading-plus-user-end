@@ -50,6 +50,7 @@
                 </div>
                 <div v-if="tabIndex===1" class="book-info-catalog scroll-container">
                     <p v-for="item in catalog" 
+                        :key="item.id"
                         class="book-info-catalog-item text-secondary text-one-line mouse-cursor opacity-6-hover"
                         @click="()=>router.push(`/book-read/${book.id}/${item.id}`)"
                         >
@@ -68,7 +69,10 @@
                     <span class=" text-primary mouse-cursor" @click="showFastCatalog=!showFastCatalog">{{showFastCatalog?'收起':'展开' }}</span>
                 </div>
                 <div v-show="showFastCatalog" class="book-info-fast-catalog-list scroll-container ">
-                    <p v-for="item in catalog" class="book-info-fast-catalog-item text-secondary text-one-line  mouse-cursor opacity-6-hover">
+                    <p 
+                    v-for="item in catalog"
+                    :key="item.id"
+                     class="book-info-fast-catalog-item text-secondary text-one-line  mouse-cursor opacity-6-hover">
                         {{item.title}}
                     </p>
                 </div>
@@ -120,7 +124,7 @@ const showFastCatalog = ref(false);
 const bookStore = useBookStore();
 const shelfStore = useBookShelfStore();
 const isInShelf = computed(()=>{
-    return shelfStore.isInShelf(book.value.id);
+    return shelfStore.bookShelf.some((item)=>item.id===book.value.id)
 })
 onBeforeMount(async () => {
     const bookId = parseInt(router.currentRoute.value.params.id as string);

@@ -58,8 +58,5 @@ export const useReadingHistoryStore = defineStore('readingHistory', {
             }
             return this.readingHistory.find(item=>item.book_id===bookId);
         },
-        isInHistory(bookId:number){
-            return this.readingHistory.findIndex(item=>item.book_id===bookId)!==-1;
-        }
     }
 });

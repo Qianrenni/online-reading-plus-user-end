@@ -14,6 +14,9 @@ export const useBookShelfStore= defineStore('bookShelf', {
     },
     actions:{
         async get(){
+            if (this.bookShelf.length>0){
+                return
+            }
             const {success,data} = await useApiBookShelf.get();
             if(success&&data!.length>0){
                 const bookStore = useBookStore();
@@ -23,13 +26,35 @@ export const useBookShelfStore= defineStore('bookShelf', {
                 const shelfItems = data!.map(item=>({
                     ...item,
                     ...books.find(book=>book.id===item.book_id),
-                    ...historyItems.find(historyItem=>historyItem.book_id===item.book_id)
+                    ...historyItems.find(historyItem=>historyItem.book_id===item.book_id)??{
+                        last_chapter_id:-1,
+                        last_position:0,
+                        last_read_at:''
+                    }
                 }));
+                console.log(shelfItems);
                 this.bookShelf = shelfItems as ShelfItem[];
             }
         },
         async add(bookId:number){
-            await useApiBookShelf.add(bookId);
+            const bookStore = useBookStore();
+            const readingHistoryStore = useReadingHistoryStore();
+            const [responseAdd,book,history] =  await Promise.all([
+               useApiBookShelf.add(bookId),
+               bookStore.getBookById(bookId),
+               readingHistoryStore.getSingle(bookId)
+            ]);
+            
+            if(responseAdd.success){
+                this.bookShelf.unshift({
+                    ...book,
+                    ...history??{
+                        last_chapter_id:-1,
+                        last_position:0,
+                        last_read_at:''
+                    }
+                } as ShelfItem);
+            }
         },
         isInShelf(bookId:number){
             return this.bookShelf.findIndex(item=>item.book_id===bookId)!==-1;
