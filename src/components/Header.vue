@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {QIcon, QThemeToggle} from "qyani-components";
+import router from "../route";
 
 defineOptions({
   name: 'Header'
@@ -13,7 +14,7 @@ defineOptions({
     </router-link>
     <div class="container gap-fourth">
       <div class="header-search">
-        <QSearch  />
+        <QSearch  @search="router.push('/book-search')"  />
       </div>
       <div class="container gap-fourth">
         <router-link to="/" class="link-primary container gap-fourth ">

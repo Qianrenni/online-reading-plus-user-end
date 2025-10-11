@@ -39,6 +39,16 @@ const routes = [
     path:'/book-read/:bookId/:contentId',
     name:'BookRead',
     component: () => import('./views/BookRead.vue'),
+  },
+  {
+    path:'/test',
+    name:'Test',
+    component: () => import('./views/Test.vue'),
+  },
+  {
+    path:'/book-search',
+    name:'BookSearch',
+    component: () => import('./views/BookSearch.vue'),
   }
 ];
 const router = createRouter({

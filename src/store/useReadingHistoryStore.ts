@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import type { Book, BookReadingProgress } from '../types';
 import { useApiBookReadingProgress } from '../api/bookReadingProgress';
 import { useBookStore } from './useBookStore';
+import { useMessage } from 'qyani-components';
 
 type HistoryItem = BookReadingProgress & Book;
 
@@ -58,5 +59,17 @@ export const useReadingHistoryStore = defineStore('readingHistory', {
             }
             return this.readingHistory.find(item=>item.book_id===bookId);
         },
+        async delete(bookId:number){
+            const {success} = await useApiBookReadingProgress.delete(bookId);
+            if(success){
+                const index = this.readingHistory.findIndex(item=>item.book_id===bookId);
+                if(index!==-1){
+                    this.readingHistory.splice(index,1);
+                }
+                useMessage.success('删除成功');
+            }else{
+                useMessage.error('删除失败');
+            }
+        }
     }
 });

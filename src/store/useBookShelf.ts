@@ -3,6 +3,7 @@ import type { ShelfItem } from "../types";
 import { useApiBookShelf } from "../api/bookShelf";
 import { useReadingHistoryStore } from "./useReadingHistoryStore";
 import { useBookStore } from "./useBookStore";
+import { useMessage } from "qyani-components";
 
 
 export const useBookShelfStore= defineStore('bookShelf', {
@@ -37,6 +38,9 @@ export const useBookShelfStore= defineStore('bookShelf', {
             }
         },
         async add(bookId:number){
+            if(this.bookShelf.findIndex(item=>item.book_id===bookId)!==-1){
+                return
+            }
             const bookStore = useBookStore();
             const readingHistoryStore = useReadingHistoryStore();
             const [responseAdd,book,history] =  await Promise.all([
@@ -55,10 +59,21 @@ export const useBookShelfStore= defineStore('bookShelf', {
                     }
                 } as ShelfItem);
             }
+            useMessage.success('添加成功');
+
         },
-        isInShelf(bookId:number){
-            return this.bookShelf.findIndex(item=>item.book_id===bookId)!==-1;
-        }
+        async delete(bookId:number){
+            const {success} = await useApiBookShelf.delete(bookId);
+            if(success){
+                const index = this.bookShelf.findIndex(item=>item.book_id===bookId);
+                if(index!==-1){
+                    this.bookShelf.splice(index,1);
+                }
+                useMessage.success('删除成功');
+            }else{
+                useMessage.error('删除失败');
+            }
+        },
 
 
     }
