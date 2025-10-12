@@ -8,13 +8,13 @@ defineOptions({
 </script>
 
 <template>
-  <div class="header-container container-align-center bg-card padding-24rem">
+  <div class="header-container  container-align-center bg-card padding-24rem">
     <router-link to="/" class="link-primary hidden-768">
       <h3>三味书屋</h3>
     </router-link>
     <div class="container gap-fourth">
       <div class="header-search">
-        <QSearch  @search="router.push('/book-search')"  />
+        <QSearch  @focus="router.push('/book-search')"    />
       </div>
       <div class="container gap-fourth">
         <router-link to="/" class="link-primary container gap-fourth ">
