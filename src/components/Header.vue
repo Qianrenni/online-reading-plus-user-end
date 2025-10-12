@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {QIcon, QThemeToggle} from "qyani-components";
 import router from "../route";
-
 defineOptions({
   name: 'Header'
 })
