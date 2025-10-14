@@ -1,9 +1,8 @@
 // 
 import { defineStore } from 'pinia'
 import type { User } from '../types'
-import { UseLocalStorage } from '../utils'
 import { useApiAuth } from '../api/auth';
-
+import { UseLocalStorage } from 'qyani-components';
 export const useAuthStore = defineStore('auth', {
   state: ():{
     accessToken:string|null,

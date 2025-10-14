@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useBookStore} from "../store/useBookStore.ts";
 import {onActivated, onBeforeMount, onMounted, ref, useTemplateRef} from "vue";
-import {useWindow} from "../utils/useWindow.ts";
+import { useWindowResize } from "qyani-components";
 import BookItem from "../components/BookItem.vue";
 import type {QScrollContainer} from "qyani-components";
 
@@ -11,7 +11,7 @@ defineOptions({
 const bookStore = useBookStore();
 const width = ref(window.innerWidth<768?150:200);
 const refScrollContainer = useTemplateRef<InstanceType<typeof QScrollContainer>>('home-container');
-useWindow.addResizeHandler((innerWidth,_) => {
+useWindowResize.addHandler((innerWidth,_) => {
   if (innerWidth < 768) {
     width.value = 150;
   } else {

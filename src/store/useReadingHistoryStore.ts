@@ -8,16 +8,18 @@ type HistoryItem = BookReadingProgress & Book;
 
 export const useReadingHistoryStore = defineStore('readingHistory', {
     state: () => ({
-        readingHistory:[] as HistoryItem[]
+        readingHistory:[] as HistoryItem[],
+        loading:false
     }),
     getters:{
         getReadingHistory: (state) => state.readingHistory,
     },
     actions:{
         async get(){
-            if(this.readingHistory.length>0){
+            if(this.readingHistory.length>0||this.loading){
                 return;
             }
+            this.loading = true;
             const {success,data} = await useApiBookReadingProgress.get();
             if(success){
                 const bookStore = useBookStore();
@@ -28,6 +30,7 @@ export const useReadingHistoryStore = defineStore('readingHistory', {
                 }));
                 this.readingHistory = historyItems as HistoryItem[];
             }
+            this.loading = false;
         },
         async update(bookId:number,chapterId:number,last_position:number=0){
             const index = this.readingHistory.findIndex(item=>item.book_id===bookId);

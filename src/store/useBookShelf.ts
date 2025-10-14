@@ -8,16 +8,18 @@ import { useMessage } from "qyani-components";
 
 export const useBookShelfStore= defineStore('bookShelf', {
     state: () => ({
-        bookShelf:[] as ShelfItem[]
+        bookShelf:[] as ShelfItem[],
+        loading:false
     }),
     getters:{
         getBookShelf: (state) => state.bookShelf,
     },
     actions:{
         async get(){
-            if (this.bookShelf.length>0){
+            if (this.bookShelf.length>0||this.loading){
                 return
             }
+            this.loading = true;
             const {success,data} = await useApiBookShelf.get();
             if(success&&data!.length>0){
                 const bookStore = useBookStore();
@@ -33,9 +35,9 @@ export const useBookShelfStore= defineStore('bookShelf', {
                         last_read_at:''
                     }
                 }));
-                console.log(shelfItems);
                 this.bookShelf = shelfItems as ShelfItem[];
             }
+            this.loading = false;
         },
         async add(bookId:number){
             if(this.bookShelf.findIndex(item=>item.book_id===bookId)!==-1){

@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import {QIcon, QThemeToggle} from "qyani-components";
+import {QIcon, QThemeToggle, useDebounce} from "qyani-components";
 import router from "../route";
+import { useBookSearchStore } from "../store/useBookSearchStore";
+
 defineOptions({
   name: 'Header'
-})
+});
+const bookSearchStore = useBookSearchStore();
+const debounceSearchBook  = useDebounce(bookSearchStore.searchBook,100);
 </script>
 
 <template>
@@ -13,7 +17,10 @@ defineOptions({
     </router-link>
     <div class="container gap-fourth">
       <div class="header-search">
-        <QSearch  @focus="router.push('/book-search')"    />
+        <QSearch  @focus="router.push('/book-search')"    
+          @change="(value)=>bookSearchStore.setSearchKey(value)"
+          @search="()=>debounceSearchBook()"
+        />
       </div>
       <div class="container gap-fourth">
         <router-link to="/" class="link-primary container gap-fourth ">
