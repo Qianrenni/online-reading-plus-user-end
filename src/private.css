@@ -402,6 +402,9 @@ pre::-webkit-scrollbar-thumb {
 .personal-goals-item {
     flex: 1;
 }
+.personal-center-goal-progressbar{
+    height: 0.5rem;
+}
 .line-gradient-purple{
     background: linear-gradient(to right,#6366f1,#9333ea);
 }
