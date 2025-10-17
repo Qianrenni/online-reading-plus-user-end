@@ -368,6 +368,7 @@ pre::-webkit-scrollbar-thumb {
     font-size: 0.8rem;
     padding: 0.4rem 0.6rem;
     border-radius: 0.5rem;
+    color: #515455;
     background-color: #E0E7EF
 }
 .personal-center-right-top{

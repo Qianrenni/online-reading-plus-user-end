@@ -71,34 +71,24 @@ export const  useApiAuth = {
         captcha:string,
         x_captcha_id:string,
         avatar:string='')=>{
-            const response = await fetch(`${BASE_URL}/user/register`,{
-                method:'POST',
-                headers:{
-                    'X-Captcha-Id':x_captcha_id
-                },
-                body:JSON.stringify({
+            const {success,data,message} = await post(
+                `/user/register`,
+                {
                     'user':{
                         'username':username,
-                        'password':password,
+                        'password':password, 
                         'email':email,
                         'avatar':avatar
                     },
                     'captcha':captcha
-                })
-            });
-            if (response.ok){
-                return {
-                    success:true,
-                    data:null,
-                    message:null
+                        
+                },
+                {
+                    headers:{
+                        'X-Captcha-Id':x_captcha_id,
+                    }
                 }
-            }else{
-                const result = await response.json();
-                return {
-                    success:false,
-                    data:null,
-                    message:result.message
-                }
-            }
+            )
+            return {success,data,message};
     }
 }

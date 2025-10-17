@@ -37,7 +37,6 @@
                     </p>
                     <div  class=" container gap">
                         <QFormButton type="button">开始阅读</QFormButton>
-                        <QFormButton v-if="!isInShelf" type="button" class="button-outline" @click="shelfStore.add(book.id)">加入书架</QFormButton>
                     </div>
                 </div>
             </div>
@@ -88,10 +87,8 @@
 import { useRouter } from 'vue-router';
 import { useBookStore } from '../store';
 import type { Book, Catalog } from '../types';
-import { computed, onBeforeMount, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { useWindowResize } from 'qyani-components';
-import { useBookShelfStore } from '../store/useBookShelf';
-
 defineOptions({
     name: 'BookInfo'
 });
@@ -122,15 +119,12 @@ useWindowResize.addHandler((innerWidth,_)=>{
 const tabIndex = ref(0);
 const showFastCatalog = ref(false);
 const bookStore = useBookStore();
-const shelfStore = useBookShelfStore();
-const isInShelf = computed(()=>{
-    return shelfStore.bookShelf.some((item)=>item.id===book.value.id)
-})
+
 onBeforeMount(async () => {
     const bookId = parseInt(router.currentRoute.value.params.id as string);
     const [rawbook,rawcatalog] =await Promise.all([
         bookStore.getBookById(bookId),
-        bookStore.getCatalogById(bookId)
+        bookStore.getCatalogById(bookId),
     ]);
     book.value = rawbook;
     catalog.value = rawcatalog;

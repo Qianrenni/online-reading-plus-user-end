@@ -2,7 +2,7 @@
     <div class=" personal-center-container container-row-768-column">
         <div class="personal-center-left">
             <div class=" personal-center-left-top bg-card shadow-black">
-                <QAvatar size="100px" :url="userStore.getUser?.avatar==''?'https://picsum.photos/250':userStore.getUser?.avatar"></QAvatar>
+                <QAvatar size="100px" :url="userStore.getUser?.avatar==''?'/figure.webp':userStore.getUser?.avatar"></QAvatar>
                 <h2>{{ userStore.getUser?.username }}</h2>
                 <p :style="{color: userStore.getUser?.is_active?'green':'red'}">{{ userStore.getUser?.is_active?'Active':'Inactive'}}</p>
                 <div class=" container bg-body padding-46rem container-align-center container-w100">
@@ -54,7 +54,7 @@
                 <div 
                     v-for=" histortItem in currentRead" 
                     class="personal-center-current-read bg-body mouse-cursor"
-                    @click="router.push(`/book-read/${histortItem.book_id}/${histortItem.last_chapter_id}`)"
+                    @click="router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)"
                 >
                     <QLazyImage :src="histortItem.cover" :height="height" :width="width">
 

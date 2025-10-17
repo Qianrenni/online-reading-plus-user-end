@@ -43,8 +43,8 @@
                             </div>
                         </div>
                         <div class=" container-space-between">
-                            <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.book_id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
-                            <QFormButton  type="button" v-if="!shelfIds.includes(histortItem.book_id)" class=" button-outline" @click="shelfStore.add(histortItem.book_id)"  >加入书架</QFormButton>
+                            <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
+                            <QFormButton  type="button" v-if="!shelfIds.includes(histortItem.id)" class=" button-outline" @click="shelfStore.add(histortItem.id)"  >加入书架</QFormButton>
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ const showClose = ref(false);
 const historyStore = useReadingHistoryStore();
 const shelfStore = useBookShelfStore();
 const shelfIds = computed(()=>{
-    return shelfStore.getBookShelf.map(item =>item.id);
+    return shelfStore.bookShelf.map(item =>item.id);
 })
 onBeforeMount(async ()=>{
     historyStore.get();

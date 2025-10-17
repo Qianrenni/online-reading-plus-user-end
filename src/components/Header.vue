@@ -17,7 +17,7 @@ const debounceSearchBook  = useDebounce(bookSearchStore.searchBook,100);
     </router-link>
     <div class="container gap-fourth">
       <div class="header-search">
-        <QSearch  @focus="router.push('/book-search')"    
+        <QSearch  @click="router.push('/book-search')"    
           @change="(value)=>bookSearchStore.setSearchKey(value)"
           @search="()=>debounceSearchBook()"
         />

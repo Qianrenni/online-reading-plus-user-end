@@ -45,16 +45,20 @@ export async function request<T = any>(
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), defaultConfig.timeout)
   const authStore = useAuthStore();
+  const appendHeader:{[key:string]:string} = {}
+  if (authStore.getAccessToken !==null){
+    appendHeader.Authorization = `${authStore.getTokenType} ${authStore.getAccessToken}`
+  }
   const config: RequestInit = {
     method: 'GET',
     ...options,
-    headers: { ...defaultConfig.headers, 
-              'Authorization':`${authStore.getTokenType} ${authStore.getAccessToken}`, 
+    headers: {
+              ...defaultConfig.headers,
+              ...appendHeader,
               ...options.headers,
             },
     signal: controller.signal
   }
-
   // 处理 body：如果是普通对象（非 FormData、Blob 等），自动转为 JSON 字符串
   if (config.body != null && typeof config.body === 'object' && !(config.body instanceof FormData)) {
     config.body = JSON.stringify(config.body)
@@ -73,14 +77,7 @@ export async function request<T = any>(
         message:'请求频率过快，请稍后再试'
       }
     }
-    if(response.status===401){
-      if (authStore.getRefreshToken===null){
-        return {
-          success:false,
-          data:null,
-          message:'请先登录'
-        }
-      }
+    if(response.status===401&&authStore.getRefreshToken!==null){
       const {success,data}= await useApiAuth.refreshToken(authStore.getRefreshToken);
       if(success){
         authStore.setToken(data!.access_token,data!.refresh_token,data!.token_type);
@@ -93,12 +90,18 @@ export async function request<T = any>(
     }
     const contentType = response.headers.get('content-type');
     if (!contentType?.includes('application/json')) {
-      console.log(`error ${url} return not is json`);
-      return {
-        success:response.ok?true:false,
-        data:null,
-        message:response.ok?'请求成功':'请求失败'
-      };
+       return {
+         success:response.ok?true:false,
+         data:null,
+         message:''
+       }
+    }
+    if (response.body === null){
+       return {
+         success:response.ok?true:false,
+         data:null,
+         message:''
+       }
     }
     const result: { code: number; data: T; message?: string } = await response.json();
 

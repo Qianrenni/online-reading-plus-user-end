@@ -1,21 +1,20 @@
 import {defineStore} from "pinia";
 import type {Book, Catalog} from "../types";
 import {useApiBooks} from "../api/books.ts";
-import { useMessage } from "qyani-components";
+import { shareMemoryCache, useMessage } from "qyani-components";
 
+const cache =  shareMemoryCache;
 export const useBookStore = defineStore('book', {
     state: () => ({
-        books: [] as Book[],
+        books: new Map<number,Book>(),
         total:-1,
         cursor:0,
         count:10,
         loading:false,
-        book:null as Book|null,
-        catalog:null as Catalog[]|null,
         scrollTo:0,
     }),
     getters: {
-        getBooks: (state) => state.books,
+        getBooks: (state) => Array.from(state.books.values()),
         getScrollTo: (state) => state.scrollTo,
     },
     actions: {
@@ -42,7 +41,7 @@ export const useBookStore = defineStore('book', {
             this.loading = true;
             const {success,data,message} = await useApiBooks.getBooksByList(Array.from({length:this.count},(_,i)=>this.cursor+i+1));
             if(success){
-                this.books.push(...data!);
+                data!.forEach(book=>this.books.set(book.id,book));
                 this.cursor+=this.count;
             }else{
                 useMessage.error(message);
@@ -50,18 +49,19 @@ export const useBookStore = defineStore('book', {
             this.loading = false;
         },
         async getBookById(id:number):Promise<Book>{
-            if (this.book?.id===id){
-                return this.book!
+            const key = `book_${id}`;
+            if (cache.has(key)){
+                return cache.get(key)!
             }
-            const index = this.books.findIndex(book=>book.id===id);
-            if(index>=0){
-                this.book = this.books[index];
-                return this.books[index];
+            const isFinded = this.books.has(id);
+            if(isFinded){
+                cache.set(key,this.books.get(id)!);
+                return this.books.get(id)!
             }
             const {success,data} = await useApiBooks.getBookById(id);
             if(success){
-                this.books.push(data!);
-                this.book = data!;
+                this.books.set(id,data!);
+                cache.set(key,data!);
                 return data!;
             }
             return {
@@ -73,12 +73,13 @@ export const useBookStore = defineStore('book', {
             } as Book
         },
         async getCatalogById(id:number):Promise<Catalog[]>{
-            if(this.catalog&&this.book?.id===id){
-                return this.catalog;
+            const key = `catalog_${id}`;
+            if (cache.has(key)){
+                return cache.get(key)!
             }
             const {success,data} = await useApiBooks.getCatalogById(id);
             if(success){
-                this.catalog = data!;
+                cache.set(key,data!);
                 return data!;
             }
             return [];
@@ -88,12 +89,22 @@ export const useBookStore = defineStore('book', {
             return data||''
         },
         async getBookByList(book_ids:number[]){
-            const booksFinded = this.books.filter(book=>book_ids.includes(book.id));
-            const booksNotFinded = book_ids.filter(bookId=>!booksFinded.some(book=>book.id===bookId));
+            const booksFinded = [] as Book[];
+            const booksNotFinded = [] as number[];
+            for(const bookId of book_ids){
+                if (this.books.has(bookId)){
+                    booksFinded.push(this.books.get(bookId)!);
+                }else if(cache.has(`book_${bookId}`)){
+                    booksFinded.push(cache.get(`book_${bookId}`)!);
+                }else{
+                    booksNotFinded.push(bookId);
+                }
+            }
             if(booksNotFinded.length>0){
                 const {success,data,message} = await useApiBooks.getBooksByList(booksNotFinded);
                 if(success){
-                    this.books.push(...data!);
+                    data!.forEach(book=>this.books.set(book.id,book));
+                    data!.forEach(book=>cache.set(`book_${book.id}`,book));
                     booksFinded.push(...data!);
                 }else{
                     console.error(message);
