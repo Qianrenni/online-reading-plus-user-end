@@ -90,13 +90,6 @@ const {loading,run}= useWrapLoad(async () => {
         authStore.setRemeber(form.value.remember.length>0);
         authStore.setToken(data?.access_token!,data?.refresh_token!,data?.token_type!);
         authStore.setUser(data?.user!);
-        if(authStore.redictUrl!==null){
-            const url = authStore.redictUrl;
-            authStore.setRedictUrl(null);
-            router.replace(url);
-        }else{
-            router.back();
-        }
     }else{
         useMessage.error(message);
     }

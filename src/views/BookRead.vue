@@ -121,7 +121,7 @@ import { computed, onBeforeMount, ref } from 'vue';
 import type { Book, Catalog, ReadSettings } from '../types';
 import { useBookStore } from '../store';
 import router from '../route';
-import { applySpacingToHtml } from '../utils/useHtmlUtil';
+import { applySpacingToHtml, isHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
 import { useWindowResize } from 'qyani-components';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
@@ -165,7 +165,8 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
         return;
     }
     const rawContent = await bookStore.getBookChapterById(id);
-    content.value = applySpacingToHtml(rawContent);
+    const processedContent = isHtml(rawContent)?rawContent:rawContent.split('\n').map(item=>`<p>${item}</p>`).join('')
+    content.value = applySpacingToHtml(processedContent);
     currentContentId.value = id;
     setTimeout(async ()=>{
         readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);

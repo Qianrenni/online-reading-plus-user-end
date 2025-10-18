@@ -6,11 +6,11 @@
                 <div class="book-info-meta text-secondary">
                     <h3>{{book.name}}</h3>
                     <p class="container-row-768-column gap-half">
-                        <p class=" container gap-half">
+                        <p class=" container-align-center gap-half">
                             <QIcon icon="User" size="16px"/>
                             <h5>{{book.author}}</h5>
                         </p>
-                        <p class=" container gap-half">
+                        <p class=" container-align-center  gap-half">
                             <QIcon icon="Calender" size="16px"/>
                             <h5>{{book.created_at.split('T')[0]}}</h5>
                         </p>

@@ -219,3 +219,13 @@ export function applySpacingToHtml(
 </body>
 </html>`;
 }
+
+/**
+ * 
+ * @param str  字符串
+ * @returns  是否是html
+ */
+export function isHtml(str:string) {
+  // 简单判断：是否包含成对的 <...> 且不是转义字符
+  return /<[a-z][\s\S]*>/i.test(str.trim());
+}
