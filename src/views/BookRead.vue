@@ -1,18 +1,22 @@
 <template>
-    <div class=" container-w100 scroll-container" style="height: calc(100vh - 3.5rem);">
-        <div class="book-read-container bg-card scroll-container">
-        <QLoading v-show="loading" style="height: calc( 100vh - 4rem );width: 100%;" type="skeleton"/>
-        <div v-show="!loading" v-html="content" class="book-read-content" 
-        @click="shwoBottomSettings=true"
-        :style="{
-            fontSize: readSettings.fontSize,
-            fontFamily: readSettings.fontFamily,
-            lineHeight: readSettings.lineHeight,
-            letterSpacing: readSettings.letterSpacing,
-            color: readSettings.color,
-            backgroundColor: readSettings.backgroundColor
-        }"
-         />
+    <div class=" container-w100 scroll-container"  
+        ref="bookReadContainer" 
+        style="height: calc(100vh - 3.5rem);">
+        <div 
+            class="book-read-container bg-card "
+        >
+            <QLoading v-show="loading" style="height: calc( 100vh - 4rem );width: 100%;" type="skeleton"/>
+            <div v-show="!loading" v-html="content" class="book-read-content" 
+                    @click="shwoBottomSettings=true"
+                    :style="{
+                        fontSize: readSettings.fontSize,
+                        fontFamily: readSettings.fontFamily,
+                        lineHeight: readSettings.lineHeight,
+                        letterSpacing: readSettings.letterSpacing,
+                        color: readSettings.color,
+                        backgroundColor: readSettings.backgroundColor
+                    }"
+            />
         <div class="book-read-sidebar bg-card hidden-768">
             <div class=" container-column container-align-center book-read-sidebar-item  "
             @click="currentContentIndex>0?run(computeCatalog[currentContentIndex-1].id):void(0)"
@@ -117,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, nextTick, onBeforeMount, ref, useTemplateRef } from 'vue';
 import type { Book, Catalog, ReadSettings } from '../types';
 import { useBookStore } from '../store';
 import router from '../route';
@@ -127,6 +131,7 @@ import { useWindowResize } from 'qyani-components';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 
 
+const bookReadContainer = useTemplateRef<HTMLDivElement>('bookReadContainer');
 const book = ref<Book>({} as Book);
 const catalog = ref<Catalog[]>([] as Catalog[]);
 const bookStore = useBookStore();
@@ -168,6 +173,11 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
     const processedContent = isHtml(rawContent)?rawContent:rawContent.split('\n').map(item=>`<p>${item}</p>`).join('')
     content.value = applySpacingToHtml(processedContent);
     currentContentId.value = id;
+    await nextTick();
+    bookReadContainer.value?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
     setTimeout(async ()=>{
         readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);
     },0);

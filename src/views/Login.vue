@@ -54,6 +54,8 @@ import { useMessage } from 'qyani-components';
 import { useWrapLoad } from '../utils';
 import { useAuthStore } from '../store';
 import router from '../route';
+import { useBookShelfStore } from '../store/useBookShelf';
+import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 defineOptions({
     name: 'Login'
 });
