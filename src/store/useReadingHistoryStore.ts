@@ -33,7 +33,7 @@ export const useReadingHistoryStore = defineStore('readingHistory', {
             this.loading = false;
         },
         async update(bookId:number,chapterId:number,last_position:number=0){
-            const index = this.readingHistory.findIndex(item=>item.book_id===bookId);
+            const index = this.readingHistory.findIndex(item=>item.id===bookId);
             if(index!==-1){
                 const [item] = this.readingHistory.splice(index,1);
                 item.last_chapter_id = chapterId;

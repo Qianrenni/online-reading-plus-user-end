@@ -96,15 +96,14 @@ export async function request<T = any>(
          message:''
        }
     }
-    if (response.body === null){
+    const result: { code: number; data: T; message?: string } = await response.json();
+    if (result===null){
        return {
          success:response.ok?true:false,
          data:null,
          message:''
        }
     }
-    const result: { code: number; data: T; message?: string } = await response.json();
-
     const success = result.code === ResponseCode.SUCCESS;
     if(showMessage&&!success){
       useMessage.error(result.message??'请求失败'); 
@@ -114,7 +113,8 @@ export async function request<T = any>(
       data: success ? result.data : null,
       message: result.message??(success ? '成功' : '请求失败')
     }
-  } catch (error) {
+  }
+  catch (error) {
     clearTimeout(timeoutId)
     // 如果是 AbortError，说明是超时或手动取消
     console.error(error);

@@ -15,8 +15,13 @@
                 <QFormButton type="button" class=" button-outline container-w100">
                     <div class=" container container-w100 container-center gap-half">
                         <QIcon icon="Edit" size="16px" />
-                        <span>Edit</span>
+                        <span>修改资料</span>
                     </div>
+                </QFormButton>
+                <QFormButton type="button" class=" exit-button container-w100" 
+                    @click="()=>exitHandler()"
+                >
+                        <span>退出登录</span>
                 </QFormButton>
             </div>
             <div class="personal-center-left-top bg-card shadow-black">
@@ -108,6 +113,11 @@ const currentRead = computed(()=>{
 });
 const width =64;
 const height = 96;
+const  exitHandler =  ()=>{
+    userStore.clearUser();
+    userStore.clearToken();
+    window.location.reload();
+}
 </script>
 
 <style scoped lang="css">

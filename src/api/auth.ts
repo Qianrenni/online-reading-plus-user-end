@@ -1,4 +1,3 @@
-import { BASE_URL } from "../config";
 import type { User } from "../types";
 import { get, post } from "../utils";
 

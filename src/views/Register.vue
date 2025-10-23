@@ -64,6 +64,7 @@ import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useValidate } from '../utils';
 import { useMessage } from 'qyani-components';
+import router from '../route';
 const image = ref<string>('');
 const form = ref({
     username: '',
@@ -110,6 +111,7 @@ const register = async () => {
     );
     if (success){
         useMessage.success('注册成功，请登录');
+        router.push('/login');
     }else{
         useMessage.error(message);
     }

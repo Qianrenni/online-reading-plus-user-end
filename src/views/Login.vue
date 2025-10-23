@@ -107,6 +107,12 @@ watch(
         }else{
             router.back();
         }
+        const bookShelfStore = useBookShelfStore();
+        const readingHistoryStore = useReadingHistoryStore();
+        Promise.allSettled([
+            bookShelfStore.get(),
+            readingHistoryStore.get()
+        ])
     }
 )
 onMounted( async ()=>{
