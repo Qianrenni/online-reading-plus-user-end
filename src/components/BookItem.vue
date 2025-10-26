@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import type {Book} from "../types";
-
+import { QCard,QLazyImage,QFormButton } from "qyani-components";
 defineOptions({
   name: 'BookItem'
 })

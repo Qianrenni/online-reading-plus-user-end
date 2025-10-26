@@ -129,7 +129,7 @@ import { applySpacingToHtml, isHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
 import { useWindowResize } from 'qyani-components';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
-
+import { QLoading,QIcon,QDrawer } from 'qyani-components';
 
 const bookReadContainer = useTemplateRef<HTMLDivElement>('bookReadContainer');
 const book = ref<Book>({} as Book);

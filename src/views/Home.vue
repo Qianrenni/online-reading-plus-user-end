@@ -3,7 +3,7 @@ import {useBookStore} from "../store/useBookStore.ts";
 import {onActivated, onBeforeMount, onMounted, ref, useTemplateRef} from "vue";
 import { useWindowResize } from "qyani-components";
 import BookItem from "../components/BookItem.vue";
-import type {QScrollContainer} from "qyani-components";
+import {QScrollContainer,QLoading} from "qyani-components";
 
 defineOptions({
   name: 'Home'

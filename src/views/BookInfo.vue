@@ -88,7 +88,7 @@ import { useRouter } from 'vue-router';
 import { useBookStore } from '../store';
 import type { Book, Catalog } from '../types';
 import { onBeforeMount, ref } from 'vue';
-import { useWindowResize } from 'qyani-components';
+import { useWindowResize,QLazyImage,QIcon,QFormButton,QTab } from 'qyani-components';
 defineOptions({
     name: 'BookInfo'
 });

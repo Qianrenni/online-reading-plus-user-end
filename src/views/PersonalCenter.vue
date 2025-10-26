@@ -104,6 +104,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '../store';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
+import { QIcon,QFormButton,QLazyImage,QAvatar,QProgressBar } from 'qyani-components';
 import router from '../route';
 
 const userStore = useAuthStore();

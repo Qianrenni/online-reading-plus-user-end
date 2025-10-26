@@ -63,7 +63,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
 import { useValidate } from '../utils';
-import { useMessage } from 'qyani-components';
+import { useMessage,QFormText,QFormButton,QLazyImage,QLoading } from 'qyani-components';
 import router from '../route';
 const image = ref<string>('');
 const form = ref({

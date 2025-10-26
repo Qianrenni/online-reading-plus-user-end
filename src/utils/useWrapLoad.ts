@@ -5,7 +5,6 @@ interface UseWrapLoadOptions {
   immediate?: boolean;
   immediateArgs?: unknown[];
 }
-
 export const useWrapLoad = <T extends (...args: any[]) => Promise<any>>(
   func: T,
   options: UseWrapLoadOptions = {}

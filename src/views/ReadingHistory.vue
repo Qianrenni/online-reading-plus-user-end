@@ -9,7 +9,7 @@
             <hr/>
         </div>
         <div class=" container-w100 container-wrap gap">
-            <SwiperAction v-for=" histortItem in historyStore.getReadingHistory " 
+            <QSwiperAction v-for=" histortItem in historyStore.getReadingHistory " 
                 :key="histortItem.id"
                 :disabled="!isLessThan768"
                 :threshold="30"
@@ -55,7 +55,7 @@
                         删除
                     </div>
                 </template>
-            </SwiperAction>
+            </QSwiperAction>
         </div>
     </div>
 </template>
@@ -63,9 +63,9 @@
 import {  computed, onBeforeMount, ref } from 'vue';
 import router from '../route';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
-import { useBookShelfStore } from '../store/useBookShelf';
+import { useBookShelfStore } from '../store/useBookShelfStore';
 import { useWindowResize } from 'qyani-components';
-import SwiperAction from '../components/SwiperAction.vue';
+import { QSwiperAction,QLazyImage,QFormButton,QProgressBar,QIcon } from 'qyani-components';
 const width =ref(96);
 const height = ref(144);
 const isLessThan768 = ref(window.innerWidth<768);

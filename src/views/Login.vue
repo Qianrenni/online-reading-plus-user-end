@@ -50,11 +50,11 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useApiCaptcha } from '../api/captcha';
 import { useApiAuth } from '../api/auth';
-import { useMessage } from 'qyani-components';
+import { useMessage,QFormText,QFormCheckboxGroup,QFormButton,QLazyImage,QLoading } from 'qyani-components';
 import { useWrapLoad } from '../utils';
 import { useAuthStore } from '../store';
 import router from '../route';
-import { useBookShelfStore } from '../store/useBookShelf';
+import { useBookShelfStore } from '../store/useBookShelfStore';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 defineOptions({
     name: 'Login'

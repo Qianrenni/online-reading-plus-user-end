@@ -1,0 +1,99 @@
+D:\project\online_reading_user_end/
+├── .codebuddy/
+
+├── .gitignore
+├── .vscode/
+|   ├── extensions.json
+|   └── settings.json
+├── dist/
+|   ├── assets/
+|   |   ├── BookInfo-TYk2q8Wq.js
+|   |   ├── BookItem.vue_vue_type_script_setup_true_lang-DIl9Pkq7.js
+|   |   ├── BookRead-CiIur5HO.js
+|   |   ├── BookSearch-DNWHTFUY.js
+|   |   ├── BookShelf-CyKXH8mK.js
+|   |   ├── captcha-CuuSjZ2E.js
+|   |   ├── Home-oFTTLdnU.js
+|   |   ├── index-CCagyxOM.js
+|   |   ├── index-Cie6gkss.css
+|   |   ├── Login-CjDhNdE0.js
+|   |   ├── PersonalCenter-KrJmMBrj.js
+|   |   ├── ReadingHistory-DVQdOb3c.js
+|   |   ├── Register-C8lyPmFI.js
+|   |   ├── svg/
+|   |   |   ├── Aim.svg
+|   |   |   ├── Bell.svg
+|   |   |   ├── Book.svg
+|   |   ├── SwiperAction-BKS4jIis.js
+|   |   ├── SwiperAction-In75FSXm.css
+|   |   ├── useBookShelf-Drgaznkj.js
+|   |   ├── useBookStore-DACY6nXX.js
+|   |   ├── useReadingHistoryStore-VFa7bJj1.js
+|   |   └── useWrapLoad-Bnu9pUpN.js
+|   ├── env-config.js
+|   ├── figure.webp
+|   ├── index.html
+|   └── logo.svg
+├── Dockerfile
+├── index.html
+├── package.json
+├── pnpm-lock.yaml
+├── public/
+|   ├── assets/
+|   |   └── svg/
+|   |   |   ├── Aim.svg
+|   |   |   ├── Bell.svg
+|   |   |   ├── Book.svg
+|   ├── env-config.js
+|   ├── figure.webp
+|   └── logo.svg
+├── README.md
+├── src/
+|   ├── api/
+|   |   ├── auth.ts
+|   |   ├── bookReadingProgress.ts
+|   |   ├── books.ts
+|   |   ├── bookShelf.ts
+|   |   └── captcha.ts
+|   ├── App.vue
+|   ├── components/
+|   |   ├── BookItem.vue
+|   |   ├── Header.vue
+|   |   └── SwiperAction.vue
+|   ├── composables/
+|   |   └── useRequest.ts
+|   ├── config/
+|   |   └── index.ts
+|   ├── main.ts
+|   ├── private.css
+|   ├── route.ts
+|   ├── store/
+|   |   ├── index.ts
+|   |   ├── useAuthStore.ts
+|   |   ├── useBookSearchStore.ts
+|   |   ├── useBookShelf.ts
+|   |   ├── useBookStore.ts
+|   |   └── useReadingHistoryStore.ts
+|   ├── types/
+|   |   └── index.ts
+|   ├── utils/
+|   |   ├── index.ts
+|   |   ├── useFetch.ts
+|   |   ├── useHtmlUtil.ts
+|   |   ├── useValidate.ts
+|   |   └── useWrapLoad.ts
+|   ├── views/
+|   |   ├── BookInfo.vue
+|   |   ├── BookRead.vue
+|   |   ├── BookSearch.vue
+|   |   ├── BookShelf.vue
+|   |   ├── Home.vue
+|   |   ├── Login.vue
+|   |   ├── PersonalCenter.vue
+|   |   ├── ReadingHistory.vue
+|   |   └── Register.vue
+|   └── vite-env.d.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts

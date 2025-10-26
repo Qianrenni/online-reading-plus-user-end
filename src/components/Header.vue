@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {QIcon, QThemeToggle, useDebounce} from "qyani-components";
+import {QIcon, QThemeToggle, useDebounce,QSearch} from "qyani-components";
 import router from "../route";
 import { useBookSearchStore } from "../store/useBookSearchStore";
 
