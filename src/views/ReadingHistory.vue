@@ -1,7 +1,7 @@
 <template>
     <div class="reading-history-container">
         <div class=" container-w100 container-column gap-half  hidden-768">
-            <q-form-button class=" button-outline" style="width: fit-content;"
+            <q-form-button class=" button-outline  padding-28rem radius-rem" style="width: fit-content;"
              @click="showClose=!showClose"
             >
                 批量管理
@@ -43,8 +43,20 @@
                             </div>
                         </div>
                         <div class=" container-space-between">
-                            <QFormButton  type="button" @click="router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)">继续阅读</QFormButton>
-                            <QFormButton  type="button" v-if="!shelfIds.includes(histortItem.id)" class=" button-outline" @click="shelfStore.add(histortItem.id)"  >加入书架</QFormButton>
+                            <QFormButton  
+                                type="button" 
+                                @click="router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)"
+                                class="  button-outline  padding-28rem radius-rem"
+                            >继续阅读
+                            </QFormButton>
+                            <QFormButton  
+                                type="button" 
+                                v-if="!shelfIds.includes(histortItem.id)" 
+                                class=" button-outline  padding-28rem radius-rem" 
+                                @click="shelfStore.add(histortItem.id)"  
+                            >
+                            加入书架
+                        </QFormButton>
                         </div>
                     </div>
                 </div>

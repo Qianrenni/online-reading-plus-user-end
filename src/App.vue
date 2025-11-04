@@ -32,8 +32,8 @@ router.beforeEach((to, _, next) => {
   
 });
 
-onBeforeMount( async () => {
-  await authStore.initial();
+onBeforeMount(  () => {
+  authStore.initial();
 });
 </script>
 <style scoped lang="css">

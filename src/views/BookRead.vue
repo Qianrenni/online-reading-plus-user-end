@@ -1,7 +1,7 @@
 <template>
     <div class=" container-w100 scroll-container"  
         ref="bookReadContainer" 
-        style="height: calc(100vh - 3.5rem);">
+        style="height: calc(100vh - 2rem);">
         <div 
             class="book-read-container bg-card "
         >
@@ -40,9 +40,11 @@
                 <QIcon icon="Setting" size="24px"/>
                 <span class=" text-08rem">阅读设置</span>
             </div>
-            <div class=" container-column container-align-center book-read-sidebar-item ">
+            <div class=" container-column container-align-center book-read-sidebar-item "
+                @click="router.push(`/book-detail/${book.id}`)"
+            >
                 <QIcon icon="Book" size="24px"/>
-                <span class=" text-08rem">加入书架</span>
+                <span class=" text-08rem">书籍详情</span>
             </div>
         </div>
         <QDrawer direction="left"
@@ -88,7 +90,7 @@
             :close-on-click-overlay="true"
             @close="shwoBottomSettings=false"
         >
-            <div class=" container-space-between"
+            <div class=" container-space-between container-wrap"
             @click="shwoBottomSettings=false"
             >
                 <div class=" container-column container-align-center book-read-sidebar-item  "
@@ -113,6 +115,12 @@
                     <QIcon icon="Setting" size="24px"/>
                     <span class=" text-08rem">阅读设置</span>
                 </div>
+                <div class=" container-column container-align-center book-read-sidebar-item "
+                    @click="router.push(`/book-detail/${book.id}`)"
+                >
+                    <QIcon icon="Book" size="24px"/>
+                    <span class=" text-08rem">书籍详情</span>
+                </div>
             </div>
         </QDrawer>
     </div>
@@ -127,7 +135,7 @@ import { useBookStore } from '../store';
 import router from '../route';
 import { applySpacingToHtml, isHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
-import { useWindowResize } from 'qyani-components';
+import { useThrottle, useWindowResize } from 'qyani-components';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 import { QLoading,QIcon,QDrawer } from 'qyani-components';
 
@@ -169,6 +177,9 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
     if(currentContentId.value===id){
         return;
     }
+    const updateReadingHistory = useThrottle(async ()=>{
+        readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);
+    });
     const rawContent = await bookStore.getBookChapterById(id);
     const processedContent = isHtml(rawContent)?rawContent:rawContent.split('\n').map(item=>`<p>${item}</p>`).join('')
     content.value = applySpacingToHtml(processedContent);
@@ -178,9 +189,8 @@ const {loading,run} = useWrapLoad(async (id:number)=>{
         top: 0,
         behavior: 'smooth'
     });
-    setTimeout(async ()=>{
-        readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);
-    },0);
+    updateReadingHistory();
+    
 });
 onBeforeMount(async () => {
     try{

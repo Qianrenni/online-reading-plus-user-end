@@ -12,13 +12,13 @@
                         <p class=" text-08rem">{{ userStore.getUser?.email }}</p>
                     </div>
                 </div>
-                <QFormButton type="button" class=" button-outline container-w100">
+                <QFormButton type="button" class=" button-outline padding-24rem container-w100">
                     <div class=" container container-w100 container-center gap-half">
                         <QIcon icon="Edit" size="16px" />
                         <span>修改资料</span>
                     </div>
                 </QFormButton>
-                <QFormButton type="button" class=" exit-button container-w100" 
+                <QFormButton type="button" class=" padding-24rem exit-button container-w100" 
                     @click="()=>exitHandler()"
                 >
                         <span>退出登录</span>

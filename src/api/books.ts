@@ -26,5 +26,18 @@ export const useApiBooks = {
     searchBook:async(key:string)=>{
         const {success,data,message} = await get<Book[]>(`/book/search?q=${key}`,undefined,true);
         return {success,data,message};
-    }
+    },
+    getBookCategory:async()=>{
+        const {success,data,message} = await get<string[]>(`/book/category`,undefined,true);
+        return {success,data,message};
+    },
+    getBookBySelect:async(category:string,offset:number,limit:number)=>{
+        const {success,data,message} = await get<Book[]>(`/book/select?category=${category}&offset=${offset}&limit=${limit}`,undefined,true);
+        return {success,data,message}
+               
+    },
+    getRecommendBook:async(tags:string)=>{
+        const {success,data,message} = await get<Book[]>(`/book/recommend?query=${tags}`,undefined,true);
+        return {success,data,message};
+    },
 }

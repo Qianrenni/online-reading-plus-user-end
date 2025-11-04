@@ -1,7 +1,7 @@
 <template>
     <div class="reading-history-container">
         <div class=" container-w100 container-column gap-half  hidden-768">
-            <q-form-button class=" button-outline" style="width: fit-content;"
+            <q-form-button class=" button-outline  padding-28rem radius-rem" style="width: fit-content;"
              @click="showClose=!showClose"
             >
                 批量管理
@@ -45,7 +45,11 @@
                                 <QProgressBar :percent="`${histortItem.last_position!*100/histortItem.total_chapter}px`"/>
                             </div>
                         </div>
-                        <QFormButton  type="button" @click="()=>router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)">
+                        <QFormButton  
+                            type="button" 
+                            @click="()=>router.push(`/book-read/${histortItem.id}/${histortItem.last_chapter_id}`)"
+                            class=" button-outline  padding-28rem radius-rem"
+                        >
                             <div class=" container-center container-align-center container-w100  ">
                                     <QIcon icon="EyeOpen" size="16px"/>
                                     <span>

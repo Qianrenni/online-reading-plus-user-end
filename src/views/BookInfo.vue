@@ -16,8 +16,8 @@
                         </p>
                     </p>    
                     <span class="book-info-meta-category">{{ book.category }}</span>
-                    <p v-if="book.tags">
-                        <span v-for="tag in book.tags.split(',')" class=" tag">
+                    <p v-if="book.tags" class=" container gap-fourth container-wrap">
+                        <span v-for="tag in book.tags.split(',')" class="book-info-tag">
                             {{ tag }}
                         </span>
                     </p>
@@ -35,9 +35,6 @@
                             <h5>12345收藏</h5>
                         </p>
                     </p>
-                    <div  class=" container gap">
-                        <QFormButton type="button">开始阅读</QFormButton>
-                    </div>
                 </div>
             </div>
             <div class=" container-w100  shadow-black  bg-card   radius-rem">
@@ -78,21 +75,32 @@
             </div>
             <div class="radius-half-rem book-info-fast-catalog  bg-card shadow-black">
                 <h4>相关推荐</h4>
+                <div v-for="item in relatedBooks"
+                    class=" container mouse-cursor"
+                    @click="initial(item.id)"
+                >
+                    <QLazyImage :src="item.cover" :height="96" :width="72" class=" radius-half-rem"/>
+                    <div  class="book-info-recommend-item-meta">
+                        <p class=" text-secondary">{{item.name}}</p>
+                        <p class=" text-description text-08rem  text-two-line">&nbsp;&nbsp;{{item.description}}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { useBookStore } from '../store';
 import type { Book, Catalog } from '../types';
 import { onBeforeMount, ref } from 'vue';
-import { useWindowResize,QLazyImage,QIcon,QFormButton,QTab } from 'qyani-components';
+import { useWindowResize,QLazyImage,QIcon,QTab } from 'qyani-components';
+import { useApiBooks } from '../api/books';
+import router from '../route';
+import { useShowLoading } from '../utils';
 defineOptions({
     name: 'BookInfo'
 });
-const router = useRouter();
 const book = ref<Book>({
     id: 0,
     name: '',
@@ -119,15 +127,25 @@ useWindowResize.addHandler((innerWidth,_)=>{
 const tabIndex = ref(0);
 const showFastCatalog = ref(false);
 const bookStore = useBookStore();
+const relatedBooks = ref([] as Book[]);
 
-onBeforeMount(async () => {
-    const bookId = parseInt(router.currentRoute.value.params.id as string);
+const initial =async (bookId: number)=> {
+    useShowLoading.show();
     const [rawbook,rawcatalog] =await Promise.all([
         bookStore.getBookById(bookId),
         bookStore.getCatalogById(bookId),
     ]);
     book.value = rawbook;
     catalog.value = rawcatalog;
+    useApiBooks.getRecommendBook(book.value.tags.split(',').join(' '))
+    .then((result)=>{
+        relatedBooks.value = result.data!.filter((item)=>item.id!==bookId);
+    })
+    useShowLoading.hide();
+} 
+onBeforeMount(()=>{
+    const bookId = parseInt(router.currentRoute.value.params.id as string);
+    initial(bookId);
 });
 </script>
 

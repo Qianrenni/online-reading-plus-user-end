@@ -1,50 +1,67 @@
 import {defineStore} from "pinia";
 import type {Book, Catalog} from "../types";
 import {useApiBooks} from "../api/books.ts";
-import { shareMemoryCache, useMessage } from "qyani-components";
+import { shareMemoryCache } from "qyani-components";
 
+/**
+ * 缓存: 缓存书籍信息
+ */
 const cache =  shareMemoryCache;
+
+/**
+ * @description 书籍Store,管理书籍获取等一系列状态,操作
+ */
 export const useBookStore = defineStore('book', {
     state: () => ({
         books: new Map<number,Book>(),
-        total:-1,
-        cursor:0,
-        count:10,
+        cursors:new Map<string,number>(),
+        categoryOvers:new Map<string,boolean>(),
+        limit:10,
         loading:false,
         scrollTo:0,
+        categories:[] as string[],
+        currentCategory:'',
+        booksSplitCategoryMap:new Map<string,number[]>(),
     }),
     getters: {
         getBooks: (state) => Array.from(state.books.values()),
         getScrollTo: (state) => state.scrollTo,
+        getCategoryBook:(state)=>{
+            if(state.currentCategory===''){
+                return Array.from(state.books.values());
+            }else{
+                return Array.from((state.booksSplitCategoryMap.get(state.currentCategory)||[]).map(id=>state.books.get(id)!))
+            }
+        }
     },
     actions: {
         setScrollTo(scrollTo:number){
             this.scrollTo = scrollTo;
         },
-        async addBook() {
-            if(this.total<0){
-                const {success,data,message} =  await useApiBooks.getTotalBookCount();
-                if(success){
-                    this.total = data!;
-                }else{
-                    useMessage.error(message);
-                    return;
-                }
-            }
-            if(this.cursor>=this.total){
-                useMessage.info('没有更多书籍了');
-                return;
-            }
-            if(this.loading){
-                return;
-            }
+        setCurrentCategory(category:string){
+            this.currentCategory = category;
+        },
+        async addBookByCategory() {
+            if(this.currentCategory===''||this.loading||(this.categoryOvers.get(this.currentCategory)||false)){return ;}
             this.loading = true;
-            const {success,data,message} = await useApiBooks.getBooksByList(Array.from({length:this.count},(_,i)=>this.cursor+i+1));
+            const currentCategory = this.currentCategory;
+            const {success,data} = await useApiBooks.getBookBySelect(
+                currentCategory,
+                this.cursors.get(currentCategory)||0,
+                this.limit
+            )
             if(success){
-                data!.forEach(book=>this.books.set(book.id,book));
-                this.cursor+=this.count;
-            }else{
-                useMessage.error(message);
+                this.cursors.set(currentCategory,(this.cursors.get(currentCategory)||0)+data!.length);
+                let previewBooks  = this.booksSplitCategoryMap.get(currentCategory)||[]; 
+                for(let i=0;i<data!.length;i++){
+                    this.books.set(data![i].id,data![i]);
+                    cache.set(`book_${data![i].id}`,data![i]);
+                    previewBooks.push(data![i].id);
+                };
+                this.booksSplitCategoryMap.set(currentCategory,previewBooks);
+                if(data!.length===0){
+                    this.categoryOvers.set(currentCategory,true);
+                }
             }
             this.loading = false;
         },
@@ -111,6 +128,12 @@ export const useBookStore = defineStore('book', {
                 }
             }
             return booksFinded;
-        }
+        },
+        async getBookCategory(){ 
+            const {success,data} = await useApiBooks.getBookCategory();
+            if(success){
+                this.categories = data!.sort((a,b)=>a.length-b.length);
+            }
+        },
     }
 })
