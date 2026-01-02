@@ -24,7 +24,6 @@ useWindowResize.addHandler((innerWidth,_) => {
 watch(
   ()=>selectedCategory.value,
   (newValue,_)=>{
-    console.log('selectedCategory',newValue);
     bookStore.setCurrentCategory(newValue);
     bookStore.addBookByCategory();
   }

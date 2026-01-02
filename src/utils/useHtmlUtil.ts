@@ -200,6 +200,10 @@ export function applySpacingToHtml(
         height: auto;
         display: block;
       }
+      p {
+        margin-top:1rem;
+        margin-bottom:1rem;
+      }
     </style>
   `;
 

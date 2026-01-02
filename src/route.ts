@@ -50,7 +50,12 @@ const routes = [
     path: '/forget-password',
     name: 'ForgetPassword',
     component: () => import('./views/ForgetPassword.vue'),
-  }
+  },
+  {
+    path: '/update-password',
+    name: 'UpdatePassword',
+    component: () => import('./views/UpdatePassword.vue'),
+  },
 ];
 const router = createRouter({
   history: createWebHashHistory(),
