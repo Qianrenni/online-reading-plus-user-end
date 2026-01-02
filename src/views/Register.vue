@@ -1,62 +1,77 @@
 <template>
-    <div class=" content-container">
-        <div class="login-container bg-card radius-rem">
-        <h3 class=" text-center">新用户注册</h3>
-        <QFormText
-            type="text"
-            v-model="form.username"
-            label="用户名"
-            placeholder="请输入用户名"
-            name="username"
-        />
-        <QFormText
-            type="password"
-            v-model="form.password"
-            label="密码"
-            placeholder="请输入密码"
-            name="password"
-        />
-        <QFormText
-            type="password"
-            v-model="form.confirmPassword"
-            label="重复输入密码"
-            placeholder="再次输入密码"
-            name="confirmPassword"
-        />
+  <div class=" content-container">
+    <div class="login-container bg-card radius-rem">
+      <h3 class=" text-center">
+        新用户注册
+      </h3>
+      <QFormText
+        v-model="form.username"
+        type="text"
+        label="用户名"
+        placeholder="请输入用户名"
+        name="username"
+      />
+      <QFormText
+        v-model="form.password"
+        type="password"
+        label="密码"
+        placeholder="请输入密码"
+        name="password"
+      />
+      <QFormText
+        v-model="form.confirmPassword"
+        type="password"
+        label="重复输入密码"
+        placeholder="再次输入密码"
+        name="confirmPassword"
+      />
 
-        <div class=" container-space-between">
-            <QFormText
-                type="email"
-                v-model="form.email"
-                label="邮箱"
-                placeholder="请输入邮箱"
-                name="email"
-            />
-            <QFormButton type="button" @click="verifyEmail">
-                    <QLoading v-if="isVerifyEmail" type="spinner"/>
-                    <span v-else> 验证邮箱</span>
-            </QFormButton>
-        </div> 
-        <div class="login-captcha-container">
-            <QFormText
-                type="text"
-                v-model="form.captcha"
-                label="验证码"
-                placeholder="请输入验证码"
-                name="captcha"
-            />
-            <QLazyImage
-                class=" mouse-cursor"
-                :width="80"  
-                :height="30" 
-                :src="image"
-                :alt="'验证码'"
-                @click="refreshCaptcha" 
-            />
-        </div>
-        <QFormButton type="button" @click="register" >注册</QFormButton>
+      <div class=" container-space-between">
+        <QFormText
+          v-model="form.email"
+          type="email"
+          label="邮箱"
+          placeholder="请输入邮箱"
+          name="email"
+        />
+        <QFormButton
+          type="button"
+          class=" button-primary"
+          @click="verifyEmail"
+        >
+          <QLoading
+            v-if="isVerifyEmail"
+            type="spinner"
+          />
+          <span v-else> 验证邮箱</span>
+        </QFormButton>
+      </div> 
+      <div class="login-captcha-container">
+        <QFormText
+          v-model="form.captcha"
+          type="text"
+          label="验证码"
+          placeholder="请输入验证码"
+          name="captcha"
+        />
+        <QLazyImage
+          class=" mouse-cursor"
+          :width="80"  
+          :height="30" 
+          :src="image"
+          :alt="'验证码'"
+          @click="refreshCaptcha" 
+        />
+      </div>
+      <QFormButton
+        type="button"
+        class=" button-primary   "
+        @click="register"
+      >
+        注册
+      </QFormButton>
     </div>
-    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';

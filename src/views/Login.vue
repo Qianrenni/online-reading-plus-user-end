@@ -1,50 +1,72 @@
 <template>
-    <div class=" content-container">
-        <div class="login-container bg-card radius-rem">
-        <h3 class=" text-center">欢迎体验</h3>
+  <div class=" content-container">
+    <div class="login-container bg-card radius-rem">
+      <h3 class=" text-center">
+        欢迎体验
+      </h3>
+      <QFormText
+        v-model="form.username"
+        type="email"
+        label="用户名"
+        placeholder="请输入用户名"
+        name="username"
+      />
+      <QFormText
+        v-model="form.password"
+        type="password"
+        label="密码"
+        placeholder="请输入密码"
+        name="password"
+      />
+      <div class="login-captcha-container">
         <QFormText
-            type="email"
-            v-model="form.username"
-            label="用户名"
-            placeholder="请输入用户名"
-            name="username"
+          v-model="form.captcha"
+          type="text"
+          label="验证码"
+          placeholder="请输入验证码"
+          name="captcha"
         />
-        <QFormText
-            type="password"
-            v-model="form.password"
-            label="密码"
-            placeholder="请输入密码"
-            name="password"
+        <QLazyImage
+          class=" mouse-cursor"
+          :width="80"  
+          :height="30" 
+          :src="image"
+          @click="refreshCaptcha" 
         />
-        <div class="login-captcha-container">
-            <QFormText
-                type="text"
-                v-model="form.captcha"
-                label="验证码"
-                placeholder="请输入验证码"
-                name="captcha"
-            />
-            <QLazyImage
-                class=" mouse-cursor"
-                :width="80"  
-                :height="30" 
-                :src="image"
-                @click="refreshCaptcha" 
-            />
-        </div>
-        <div class=" container-space-between">
-            <QFormCheckboxGroup :options="[{label:'记住我',value:'remember'}]" v-model="form.remember"/>
-            <RouterLink to="/forget-password" class=" link-primary">忘记密码?</RouterLink>
-        </div>
-        <QFormButton type="button" @click="()=>run()">
-            <QLoading v-if="loading" type="spinner"/>
-            <span v-else>登录</span>
-        </QFormButton>
-        <div class=" container-space-between">
-            <RouterLink to="/register" class=" link-primary">没有账号?立即注册</RouterLink>
-        </div>
+      </div>
+      <div class=" container-space-between">
+        <QFormCheckboxGroup
+          v-model="form.remember"
+          :options="[{label:'记住我',value:'remember'}]"
+        />
+        <RouterLink
+          to="/forget-password"
+          class=" link-primary"
+        >
+          忘记密码?
+        </RouterLink>
+      </div>
+      <QFormButton
+        type="button"
+        class=" button-primary "
+        @click="()=>run()"
+      >
+        <QLoading
+          v-if="loading"
+          type="spinner"
+        />
+        <span v-else>登录</span>
+      </QFormButton>
+      <div class=" container-space-between">
+        <RouterLink
+          to="/register"
+          class=" link-primary"
+        >
+          没有账号?立即注册
+        </RouterLink>
+      </div>
     </div>
-    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';

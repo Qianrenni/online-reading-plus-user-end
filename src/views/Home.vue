@@ -44,29 +44,39 @@ onActivated(() => {
 <template>
   <KeepAlive>
     <QScrollContainer
-      scroll-Y
       ref="home-container"
+      scroll-y
       class="container-banner   bg-card scroll-container home-container" 
       @ended="bookStore.addBookByCategory()"
       @scroll="({y}:{y:number})=>bookStore.setScrollTo(y)"
-      >
-    <div class="  category-container scroll-container">
-      <span 
-        v-for="value in bookStore.categories" 
-        :key="value" 
-        class="  mouse-cursor text-secondary category-item"
-        :class="[
-          { 'active': selectedCategory === value }
-        ]"
-        @click="selectedCategory = value"
-      >
-        {{ value }}
-      </span>
-    </div>
-    <BookItem
-        v-for="book in bookStore.getCategoryBook" :key="book.id"
-        :book="book" :width="width" :height="width"/>
-    <QLoading v-for="i in 10" :key="i" :show="bookStore.loading" class=" book-item-skeleton" type="skeleton"/>
-  </QScrollContainer>
+    >
+      <div class="  category-container scroll-container">
+        <span 
+          v-for="value in bookStore.categories" 
+          :key="value" 
+          class="  mouse-cursor text-secondary category-item"
+          :class="[
+            { 'active': selectedCategory === value }
+          ]"
+          @click="selectedCategory = value"
+        >
+          {{ value }}
+        </span>
+      </div>
+      <BookItem
+        v-for="book in bookStore.getCategoryBook"
+        :key="book.id"
+        :book="book"
+        :width="width"
+        :height="width"
+      />
+      <QLoading
+        v-for="i in 10"
+        :key="i"
+        :show="bookStore.loading"
+        class=" book-item-skeleton"
+        type="skeleton"
+      />
+    </QScrollContainer>
   </KeepAlive>
 </template>

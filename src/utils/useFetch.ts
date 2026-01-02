@@ -1,13 +1,13 @@
 // utils/request.ts
-import { useMessage } from 'qyani-components'
-import { BASE_URL } from '../config'
-import { useAuthStore } from '../store/useAuthStore'
-import { useApiAuth } from '../api/auth'
+import {useMessage} from 'qyani-components'
+import {BASE_URL} from '../config'
+import {useAuthStore} from '../store/useAuthStore'
+import {useApiAuth} from '../api/auth'
 
 // 响应码枚举
-const ResponseCode =  {
-  SUCCESS : 0,
-  FAIL : 1
+const ResponseCode = {
+  SUCCESS: 0,
+  FAIL: 1
 } as const
 
 // 默认配置
@@ -42,13 +42,19 @@ export async function request<T = any>(
   options: RequestOptions = {},
   showMessage: boolean = false,
 ): Promise<RequestResult<T>> {
+
+  // 创建 AbortController 和 timeoutId, 用于取消请求
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), defaultConfig.timeout)
+  // 获取当前用户信息
   const authStore = useAuthStore();
-  const appendHeader:{[key:string]:string} = {}
-  if (authStore.getAccessToken !==null){
+  // 添加请求头
+  const appendHeader: { [key: string]: string } = {}
+  // 添加授权信息
+  if (authStore.getAccessToken !== null) {
     appendHeader.Authorization = `${authStore.getTokenType} ${authStore.getAccessToken}`
   }
+  // 组合请求配置
   const config: RequestInit = {
     method: 'GET',
     ...options,
@@ -64,11 +70,14 @@ export async function request<T = any>(
     config.body = JSON.stringify(config.body)
   }
 
+  // 构建完整 URL
   const fullUrl = defaultConfig.baseURL + url
-
+  // 发送请求
   try {
     const response = await fetch(fullUrl, config);
+    // 清除超时定时器
     clearTimeout(timeoutId);
+    // 响应码为 429 时，说明请求频率过快，返回错误信息
     if(response.status===429){
       useMessage.error('请求频率过快，请稍后再试');
       return {
@@ -77,6 +86,7 @@ export async function request<T = any>(
         message:'请求频率过快，请稍后再试'
       }
     }
+    // 响应码为 401 时，说明授权信息过期，尝试刷新授权信息  
     if(response.status===401&&authStore.getRefreshToken!==null){
       const {success,data}= await useApiAuth.refreshToken(authStore.getRefreshToken);
       if(success){
@@ -88,23 +98,38 @@ export async function request<T = any>(
         authStore.clearUser();
       }
     }
+    // 判断响应内容是否为 JSON
     const contentType = response.headers.get('content-type');
+    // 如果不是 JSON，则直接返回结果
     if (!contentType?.includes('application/json')) {
-       return {
-         success:response.ok?true:false,
-         data:null,
-         message:''
-       }
+      return {
+        success: response.ok ? true : false,
+        data: null,
+        message: ''
+      }
     }
-    const result: { code: number; data: T; message?: string } = await response.json();
-    if (result===null){
-       return {
-         success:response.ok?true:false,
-         data:null,
-         message:''
-       }
+    const reponseText = await response.text();
+    // 如果没有body，直接返回
+    if (reponseText === null || reponseText == undefined || reponseText === '') {
+      return {
+        success: response.ok ? true : false,
+        data: null,
+        message: ''
+      }
     }
+    // 解析响应结果
+    const result: { code: number; data: T; message?: string } = JSON.parse(reponseText);
+    // 如果响应结果为 null，则返回错误信息
+    if (result === null) {
+      return {
+        success: response.ok ? true : false,
+        data: null,
+        message: ''
+      }
+    }
+    // 判断响应结果是否成功
     const success = result.code === ResponseCode.SUCCESS;
+    // 是否显示错误信息
     if(showMessage&&!success){
       useMessage.error(result.message??'请求失败'); 
     }

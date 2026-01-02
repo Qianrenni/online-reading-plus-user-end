@@ -1,4 +1,5 @@
 import {createRouter, createWebHashHistory} from "vue-router";
+
 const routes = [
   {
     path: '/',
@@ -36,14 +37,19 @@ const routes = [
     component: () => import('./views/BookInfo.vue'),
   },
   {
-    path:'/book-read/:bookId/:contentId',
-    name:'BookRead',
+    path: '/book-read/:bookId/:contentId',
+    name: 'BookRead',
     component: () => import('./views/BookRead.vue'),
   },
   {
-    path:'/book-search',
-    name:'BookSearch',
+    path: '/book-search',
+    name: 'BookSearch',
     component: () => import('./views/BookSearch.vue'),
+  },
+  {
+    path: '/forget-password',
+    name: 'ForgetPassword',
+    component: () => import('./views/ForgetPassword.vue'),
   }
 ];
 const router = createRouter({
