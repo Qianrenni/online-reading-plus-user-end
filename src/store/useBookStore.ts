@@ -101,8 +101,8 @@ export const useBookStore = defineStore('book', {
             }
             return [];
         },
-        async getBookChapterById(id:number){
-            const {data} = await useApiBooks.getBookChapterById(id);
+        async getBookChapterById(chapterId:number,bookId:number){
+            const {data} = await useApiBooks.getBookChapterById(chapterId,bookId);
             return data||''
         },
         async getBookByList(book_ids:number[]){

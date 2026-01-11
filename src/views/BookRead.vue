@@ -226,17 +226,17 @@ const readSettings = ref<ReadSettings>({
     backgroundColor: 'var(--card-bg)',
 });
 
-const {loading,run} = useWrapLoad(async (id:number)=>{
-    if(currentContentId.value===id){
+const {loading,run} = useWrapLoad(async (chapterId:number)=>{
+    if(currentContentId.value===chapterId){
         return;
     }
     const updateReadingHistory = useThrottle(async ()=>{
-        readingHistoryStore.update(book.value.id,id,currentContentIndex.value+1);
+        readingHistoryStore.update(book.value.id,chapterId,currentContentIndex.value+1);
     });
-    const rawContent = await bookStore.getBookChapterById(id);
+    const rawContent = await bookStore.getBookChapterById(chapterId,book.value.id);
     const processedContent = isHtml(rawContent)?rawContent:rawContent.split('\n').map(item=>`<p>&nbsp;&nbsp;&nbsp;&nbsp;${item}</p>`).join('')
     content.value = applySpacingToHtml(processedContent);
-    currentContentId.value = id;
+    currentContentId.value = chapterId;
     await nextTick();
     bookReadContainer.value?.scrollTo({
         top: 0,
