@@ -238,7 +238,7 @@ const readSettings = ref<ReadSettings>({
     backgroundColor: 'var(--card-bg)',
 });
 const heartBeat = {
-  interval:7000,
+  interval:10000,
   timer: -1,
   task: async function(){
     if(currentContentId.value!==-1){
