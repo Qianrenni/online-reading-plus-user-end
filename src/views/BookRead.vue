@@ -182,33 +182,44 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeMount, ref, useTemplateRef } from 'vue';
+import { computed, nextTick, onBeforeMount, onBeforeUnmount, ref, useTemplateRef } from 'vue';
 import type { Book, Catalog, ReadSettings } from '../types';
 import { useBookStore } from '../store';
 import router from '../route';
 import { applySpacingToHtml, isHtml } from '../utils/useHtmlUtil';
 import { useWrapLoad } from '../utils';
-import { useThrottle, useWindowResize } from 'qyani-components';
+import { useScreenSize, useThrottle } from 'qyani-components';
 import { useReadingHistoryStore } from '../store/useReadingHistoryStore';
 import { QLoading,QIcon,QDrawer } from 'qyani-components';
+import { useApiReport } from '../api';
 
+// 用于切换时滚动到顶部
 const bookReadContainer = useTemplateRef<HTMLDivElement>('bookReadContainer');
+// 书籍信息
 const book = ref<Book>({} as Book);
+// 目录
 const catalog = ref<Catalog[]>([] as Catalog[]);
+// 书籍存储
 const bookStore = useBookStore();
+// 是否显示目录
 const showCatalog = ref<boolean>(false);
+// 当前内容
 const content = ref<string>('');
+// 目录呈现顺序
 const  catalogAscOrder= ref(true);
+// 当前内容对应的章节ID
 const currentContentId = ref<number>(-1);
+// 当前内容在目录中的索引
 const currentContentIndex= computed(()=>{
     return catalog.value.findIndex(item=>item.id===currentContentId.value);
 });
+// 是否显示底部设置
 const shwoBottomSettings = ref<boolean>(false);
-const isCanShowBottomSettings = ref<boolean>(window.innerWidth<768);
+// 是否可以显示底部设置
+const isCanShowBottomSettings = useScreenSize.getWidth(768);
+// 阅读历史存储
 const readingHistoryStore = useReadingHistoryStore();
-useWindowResize.addHandler((width,_)=>{
-    isCanShowBottomSettings.value = width<768;
-})
+// 目录
 const computeCatalog = computed(( )=>{
     if(catalogAscOrder.value){
         return catalog.value;
@@ -216,6 +227,7 @@ const computeCatalog = computed(( )=>{
         return [...catalog.value].reverse();
     }
 })
+// 阅读设置
 /* Songti SC, SimSun; */
 const readSettings = ref<ReadSettings>({
     fontSize: '1rem',
@@ -225,32 +237,84 @@ const readSettings = ref<ReadSettings>({
     color: 'var(--text-color)',
     backgroundColor: 'var(--card-bg)',
 });
-
+const heartBeat = {
+  interval:7000,
+  timer: -1,
+  task: async function(){
+    if(currentContentId.value!==-1){
+      useApiReport.reportChapterRead(
+        book.value.id,
+        currentContentId.value,
+        'heartbeat'
+      )
+    }
+  },
+  start: function() {
+    this.stop();
+    this.timer = setInterval(heartBeat.task,heartBeat.interval);
+  },
+  stop: function() {
+    clearInterval(this.timer);
+    this.timer = -1;
+  },
+}
+const updateReadingHistory = useThrottle(async (bookId:number,chapterId:number,index:number)=>{
+    readingHistoryStore.update(bookId,chapterId,index);
+});
+/**
+ * 加载章节内容
+ * @param chapterId 章节ID
+ */
 const {loading,run} = useWrapLoad(async (chapterId:number)=>{
+    // 如果当前内容ID等于要加载的内容ID，则返回,避免重复加载
     if(currentContentId.value===chapterId){
         return;
     }
-    const updateReadingHistory = useThrottle(async ()=>{
-        readingHistoryStore.update(book.value.id,chapterId,currentContentIndex.value+1);
-    });
+    if(currentContentId.value!==-1){
+      // 上报离开当前章节
+      useApiReport.reportChapterRead(
+        book.value.id,
+        currentContentId.value,
+        'exit'
+      )
+      heartBeat.stop();
+    }
+    // 获取章节内容
     const rawContent = await bookStore.getBookChapterById(chapterId,book.value.id);
+    // 处理章节内容
     const processedContent = isHtml(rawContent)?rawContent:rawContent.split('\n').map(item=>`<p>&nbsp;&nbsp;&nbsp;&nbsp;${item}</p>`).join('')
+    // 更新实际显示内容
     content.value = applySpacingToHtml(processedContent);
+    // 更新当前内容ID
     currentContentId.value = chapterId;
+    // 更新阅读历史
+    updateReadingHistory(book.value.id,chapterId,currentContentIndex.value+1);
+    // 上报阅读数据,进入新章节
+    useApiReport.reportChapterRead(
+      book.value.id,
+      chapterId,
+      'enter'
+    )
+    heartBeat.start();
+    // 等待DOM更新
     await nextTick();
+    // 滚动到顶部
     bookReadContainer.value?.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
-    updateReadingHistory();
+
     
 });
+// 在挂载前执行
 onBeforeMount(async () => {
     try{
+        // 从路由参数获取书籍ID和内容ID
         const bookId = parseInt(router.currentRoute.value.params.bookId as string);
         const contentId = parseInt(router.currentRoute.value.params.contentId as string);
         book.value.id=bookId;
         if (contentId!==-1){
+            //获取书籍信息和目录
             const [rawBook,rawCatalog,_] = await Promise.all([
                 bookStore.getBookById(bookId),
                 bookStore.getCatalogById(bookId),
@@ -259,6 +323,7 @@ onBeforeMount(async () => {
             book.value = rawBook;
             catalog.value = rawCatalog;
         }else{
+            //获取书籍信息和目录，然后获取第一个目录的内容
             const [rawBook,rawCatalog] = await Promise.all([
                 bookStore.getBookById(bookId),
                 bookStore.getCatalogById(bookId),
@@ -273,6 +338,17 @@ onBeforeMount(async () => {
         console.log(e);
     }
 });
+// 在卸载前上报离开当前章节
+onBeforeUnmount(()=>{
+  if(currentContentId.value!==-1){
+    useApiReport.reportChapterRead(
+      book.value.id,
+      currentContentId.value,
+      'exit'
+    )
+  }
+  heartBeat.stop();
+})
 </script>
 
 <style scoped lang="CSS">
